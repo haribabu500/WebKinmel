@@ -71,10 +71,13 @@ public class AdminController {
 		if(uploadedFile!=null){
 			String fileName=uploadedFile.getOriginalFilename();
 			try {
-				String path=req.getContextPath();
-				System.out.println(path);
-				File file=new File(path+"/foo.txt");
-				file.createNewFile();
+//				String path=req.getContextPath();
+//				System.out.println(path);
+//				File file=new File(path+"/foo.txt");
+//				file.createNewFile();
+				
+				
+				
 //				String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
 				String imagePath="/Users/hari/git/local_WebKinmel/WebKinmel/WebContent/resources/upload/"+fileName;
 				File f=new File(imagePath);
