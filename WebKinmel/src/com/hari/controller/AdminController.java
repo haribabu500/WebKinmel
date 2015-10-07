@@ -70,7 +70,6 @@ public class AdminController {
 			String fileName=uploadedFile.getOriginalFilename();
 			try {
 //				String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
-				
 				String imagePath="/Users/hari/git/local_WebKinmel/WebKinmel/WebContent/resources/upload/"+fileName;
 				File f=new File(imagePath);
 				formItem.setImagePath("/WebKinmel"+imagePath.substring(imagePath.indexOf("/resources")));
