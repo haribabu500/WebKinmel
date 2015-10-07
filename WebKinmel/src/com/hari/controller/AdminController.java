@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,11 +66,15 @@ public class AdminController {
 		
 	}
 	@RequestMapping("admin/addItemAction")
-	public ModelAndView addItemAction(@ModelAttribute("item")Item formItem){
+	public ModelAndView addItemAction(@ModelAttribute("item")Item formItem,HttpServletRequest req){
 		MultipartFile uploadedFile=formItem.getFile();
 		if(uploadedFile!=null){
 			String fileName=uploadedFile.getOriginalFilename();
 			try {
+				String path=req.getContextPath();
+				System.out.println(path);
+				File file=new File(path+"/foo.txt");
+				file.createNewFile();
 //				String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
 				String imagePath="/Users/hari/git/local_WebKinmel/WebKinmel/WebContent/resources/upload/"+fileName;
 				File f=new File(imagePath);
