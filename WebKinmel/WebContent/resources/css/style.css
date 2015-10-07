@@ -1,0 +1,236 @@
+@charset "utf-8";
+/* CSS Document */
+body
+{
+	background:url(/WebKinmel/resources/image/bg1.jpg) repeat-x;	
+	height:auto;
+}
+.wrapper
+{
+	width:1000px;
+	margin:0 auto;
+	margin-top:9px;
+	height:auto;
+	/*background:#AA5FFF;*/
+}
+.topbar
+{
+	height:23px;
+	/*background:#00F;*/	
+}
+.topbar ul li a{color:#FFF;}
+.topbar ul li a:hover{text-decoration:none;}
+.topbar ul li a:focus{text-decoration:none;}
+.topnav
+{
+	padding-left:0px;	
+}
+.topnav li
+{
+	color:#FFF;
+	display:inline;
+	padding-right:5px;
+}
+.logobar
+{
+	height:115px;
+	background:url(/WebKinmel/resources/image/gradiant3.jpg);
+}
+.logo
+{
+	width:250px;
+	height:115px;
+	float:left;
+}
+.ss{
+	display:inline-block;	
+}
+.searchBox
+{
+	/* background:url(/WebKinmel/resources/image/search.jpg); */
+	
+	border-radius: 10px;
+    float: left;
+    height: 38px;
+    margin-left: 103px;
+    margin-top: 38px;
+}
+
+.search-input{
+	height: 35px;
+	width: 250px;
+	background:url(/WebKinmel/resources/image/search_bg.jpg);
+	border:none;
+	border-top-left-radius:5px;
+	border-bottom-left-radius:5px;
+	z-index:2;
+}
+.search-input:focus{border: none;}
+.search-input:{border:none;}
+.search-button{
+	width:50px;
+	height:35px;
+	background:url(/WebKinmel/resources/image/search_button.jpg) repeat-x;
+	color:#FFDC00;
+	font-weight:bold;
+	border:none;
+	border-top:2px;
+	float:right;
+	border-top-right-radius:5px;
+	border-bottom-right-radius:5px;
+	border-top:#BA7371 2px solid;
+	border-bottom:#7F0B0C 2px solid;
+}
+.menubar
+{
+	height:45px;	
+}
+.menubar ul
+{
+	padding-left:0px;	
+}
+.menubar ul li
+{
+	color:#FFF;
+	display:inline-block;
+	margin-right:20px;
+	text-align:left;
+	line-height: 45px;
+	font-size:17px;
+	font-weight:bold;
+}
+.menubar ul li a{color:#FFF;}
+.menubar ul li a:hover{text-decoration:none;}
+.menubar ul li a:focus{text-decoration:none;}
+.mainContent
+{
+	min-height:550px;
+	background:#FFF;
+	border-radius:15px;
+	/*padding-top:10px;*/
+	/*margin-top:5px;*/
+}
+.myPanel
+{
+	margin-bottom: 20px;
+  	background-color: #fff;
+  	border: 1px solid transparent;
+  	border-radius: 15px;
+  	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+	background:#F5F5F3;
+}
+.myPanel_category
+{
+	background:#FFEEB8;		
+}
+
+.myPanel-heading
+{
+	
+	color:#FFF;
+	background:url(/WebKinmel/resources/image/panel-bg.jpg);	
+	padding: 7px 0;
+	font-weight:bold;
+	border-top-left-radius: 15px;
+ 	border-top-right-radius: 15px;
+	text-align:center;
+}
+.myPanel-body {
+  padding:10px;
+ /* border:#ECEDE8 solid 1px;*/
+}
+.category_list
+{
+	color:#000;
+	font-weight:bold;
+	border-bottom:2px #fff solid;
+	padding:5px;
+}
+.category_list a{
+	color:#000;
+	font-weight:bold;
+}
+.category_list a:HOVER{
+	color:#000;
+	font-weight:bold;
+	text-decoration: none;
+}
+.cart-content
+{
+	border-bottom:#EEEFEA solid 1px;
+	padding:5px;	
+}
+.left{float:left;}
+.right{float:right;}
+.centre{text-align:centre;}
+.clear{clear:both;}
+.small{font-size:6px;}
+.myButton
+{
+	background:url(/WebKinmel/resources/image/button_bg.jpg);
+	height:25px;
+	color:#fff;
+	border:none;
+	/*border: 1px solid transparent;
+	border-color: #F8CFCD;
+	border-color:#CFACAA;*/
+	border-radius:5px;
+}
+.full-button{width:100%;}
+.side{
+	float:left;
+	width:200px;
+	padding:10px;	
+}
+.middle{
+	float:left;
+	width:600px;
+	padding:10px;	
+}
+.banner{
+	margin-bottom:20px;	
+}
+.tile-row{
+	border-bottom:#F2F3EE 1px solid;	
+	margin-top: 15px;
+}
+.tile{
+	width:150px;
+	height:150px;
+	
+	float:left;
+	
+	border-bottom:#F2F3EE 1px solid;	
+	margin-top: 15px;
+}
+.tile-image{
+	width:150px;
+	height:100px;
+	text-align:center;
+}
+.tile-display{
+	width:148px;
+	height:20px;
+	font-weight:bold;
+	text-align:center;
+}
+.tile-price{
+	width:148px;
+	height:20px;
+	text-align:center;
+	color:#CC3000;
+	font-weight:bold;
+}
+
+.footer{background:url(/WebKinmel/resources/image/bg_footer.jpg); height:338px;}
+.upper-footer{height:70px; }
+.lower-footer{background:height:268px; padding:0 20px}
+.lower-footer-divider{width:240px;float:left; color: #fff; padding: 20px;}
+.lower-footer-centre{color:white; padding 5px;}
+.lower-footer-bottom{text-align: center; padding-top: 10px;}
+.lower-footer-bottom-divider{color:white;border-right: 1px white solid;padding: 0 5px;}
+.test{background:red; border-radius:10px; padding:5px;}
+
+
+tr{transition: background-color 2s linear;}/* this is for animation after adding an item */
