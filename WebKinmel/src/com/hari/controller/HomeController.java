@@ -1,5 +1,6 @@
 package com.hari.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import com.hari.data.WebKinmelServiceManager;
 import com.hari.model.Category;
 import com.hari.model.Item;
 import com.hari.model.Manufacturer;
+import com.hari.model.ShoppingCart;
 
 @SessionAttributes(value={"username","cart"})
 
@@ -26,7 +28,12 @@ public class HomeController {
 		List categories=WebKinmelServiceManager.select("select c from Category c", Category.class);
 		mav.addObject("categories", categories);	
 		List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
-		mav.addObject("manufacturers", manufacturers);	
+		mav.addObject("manufacturers", manufacturers);
+		
+		ShoppingCart cart=new ShoppingCart();
+		List items=new ArrayList<Item>();
+		cart.setItems(items);
+		mav.addObject("cart",cart);
 		return mav;
 	}
 	
@@ -52,6 +59,25 @@ public class HomeController {
 		return mav;
 	}
 		
-	
+	@RequestMapping("itemDescription")
+	public ModelAndView itemDescription(@RequestParam("itemId")int itemid){
+		ModelAndView  mav=new ModelAndView("itemDescription");
+		Item item=(Item) WebKinmelServiceManager.find(itemid, Item.class);
+		mav.addObject("item", item);
+		return mav;
+	}
+	@RequestMapping("shoppingCart")
+	public ModelAndView shoppingCart(@RequestParam(value="id", required=false)String itemId,WebRequest request){
+		ModelAndView  mav=new ModelAndView("shoppingCart");
+		
+		ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+		if(itemId!=null){
+			Item item=(Item) WebKinmelServiceManager.find(Integer.parseInt(itemId), Item.class);
+			cart.getItems().add(item);
+			mav.addObject("cart",cart);
+			mav.addObject("cartItems",cart.getItems());
+		}
+		return mav;
+	}
 	
 }

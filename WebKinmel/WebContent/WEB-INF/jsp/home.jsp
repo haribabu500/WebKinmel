@@ -47,6 +47,7 @@
 	          					success:function(data){
 	          						//alert(data);
 	          						jQuery("#itemsContaiiner").html(data);
+	          						//jQuery(".middle").html(data)
 	          					},
 	          					error:function(){
 	          						alert("Oops something went wrong!!");
@@ -192,7 +193,21 @@
 				<!-- ========================================================================== -->
 				<!-- ========================================================================== -->
                 <div class="side">
-                        <div class="myPanel">
+                		<div id="shoppingCart">
+                		
+                		</div>
+                		<script>
+                			jQuery.ajax({
+                				url:"shoppingCart.htm",
+                				success:function(data){
+                					jQuery("#shoppingCart").html(data);
+                				},
+                				error:function(){
+                					alert("error loading shopping cart");
+                				}
+                			});
+                		</script>
+                        <!-- <div class="myPanel">
                                 <div class="myPanel-heading">Shoping Cart</div>
                                 <div class="myPanel-body">
                                     <div class="cart-content">
@@ -215,8 +230,8 @@
 										<button class="myButton">Cart</button>
 										<button class="myButton">Check out</button>
 									</div>
-								</div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
+								</div>End of panel body
+                        </div>End of myPanel -->
 						 <div class="myPanel">
                                 <div class="myPanel-heading">New Products</div>
                                 <div class="myPanel-body">
