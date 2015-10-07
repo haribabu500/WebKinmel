@@ -219,7 +219,5 @@ public class AdminController {
 		String usersTable=WebKinmelServiceManager.getUsersTable(userList);
 		mav.addObject("usersTable", usersTable);
 		return mav;
-	}
-	
-	
+	}	
 }
