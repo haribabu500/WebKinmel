@@ -30,6 +30,7 @@ public class HomeController {
 		List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
 		mav.addObject("manufacturers", manufacturers);
 		
+		/*This shopping should be added after the successful login to the system*/
 		ShoppingCart cart=new ShoppingCart();
 		List items=new ArrayList<Item>();
 		cart.setItems(items);
@@ -53,7 +54,7 @@ public class HomeController {
 			mav.addObject("items", newItems);
 		}
 		if(querySearch!=null){
-			List newItems=WebKinmelServiceManager.select("select i from Item i where i.name='"+querySearch+"'", Item.class);
+			List newItems=WebKinmelServiceManager.select("select i from Item i where i.name like '%"+querySearch+"%'", Item.class);
 			mav.addObject("items", newItems);
 		}
 		return mav;
@@ -77,6 +78,12 @@ public class HomeController {
 			mav.addObject("cart",cart);
 			mav.addObject("cartItems",cart.getItems());
 		}
+		double total=0;
+		for (Item item : cart.getItems()) {
+			double itemprice=item.getPrice();
+			total=total+itemprice;
+		}
+		mav.addObject("total", total);
 		return mav;
 	}
 	
