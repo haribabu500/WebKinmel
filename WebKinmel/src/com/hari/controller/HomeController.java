@@ -31,10 +31,10 @@ public class HomeController {
 		mav.addObject("manufacturers", manufacturers);
 		
 		/*This shopping should be added after the successful login to the system*/
-		ShoppingCart cart=new ShoppingCart();
-		List items=new ArrayList<Item>();
-		cart.setItems(items);
-		mav.addObject("cart",cart);
+		ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+		if(cart!=null){
+			mav.addObject("cart",cart);
+		}
 		return mav;
 	}
 	
@@ -72,18 +72,26 @@ public class HomeController {
 		ModelAndView  mav=new ModelAndView("shoppingCart");
 		
 		ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+		
+		if(cart==null){
+			ModelAndView mav2=new ModelAndView("message");
+			mav2.addObject("message", "mustLogin");
+			return mav2;
+		}
 		if(itemId!=null){
 			Item item=(Item) WebKinmelServiceManager.find(Integer.parseInt(itemId), Item.class);
 			cart.getItems().add(item);
+		}
+		double total=0;
+		if(cart!=null){
+			for (Item item : cart.getItems()) {
+				double itemprice=item.getPrice();
+				total=total+itemprice;
+			}
+			mav.addObject("total", total);
 			mav.addObject("cart",cart);
 			mav.addObject("cartItems",cart.getItems());
 		}
-		double total=0;
-		for (Item item : cart.getItems()) {
-			double itemprice=item.getPrice();
-			total=total+itemprice;
-		}
-		mav.addObject("total", total);
 		return mav;
 	}
 	@RequestMapping("removeFromShoppingCart")

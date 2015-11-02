@@ -25,12 +25,15 @@ body
 {
 	padding-left:0px;	
 }
-.topnav li
+.topnav li,.signout
 {
 	color:#FFF;
 	display:inline;
 	padding-right:5px;
 }
+.signout:hover{text-decoration: none;color:#fff;}
+.signout:focus{text-decoration:none;}
+
 .logobar
 {
 	height:115px;

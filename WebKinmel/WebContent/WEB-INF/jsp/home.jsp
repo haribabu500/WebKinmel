@@ -12,6 +12,7 @@
 <body>
 	<div class="wrapper">
     	<div class="topbar" id="topbar">
+    	<div class="left">
         	<ul class="topnav">
             	<li><a id="login" class="pointer">&bull;Sign in</a></li>
                 <li><a id="register" class="pointer">&bull;Register</a></li>
@@ -28,6 +29,10 @@
             		});
             	});
             </script>
+            </div>
+            <div class="left">
+            	<a class="signout" id="logout" href="login/logout.htm" class="pointer">&bull;Sign out</a>
+            </div>
 		</div>
         <div class="logobar">
         	<div class="logo">
@@ -216,6 +221,8 @@
                 			jQuery.ajax({
                 				url:"shoppingCart.htm",
                 				success:function(data){
+                					//alert(data);
+                					if(data!="mustLogin")
                 					jQuery("#shoppingCart").html(data);
                 				},
                 				error:function(){
