@@ -13,8 +13,8 @@
 	<div class="wrapper">
     	<div class="topbar" id="topbar">
         	<ul class="topnav">
-            	<li><a id="login">&bull;Sign in</a></li>
-                <li><a id="register">&bull;Register</a></li>
+            	<li><a id="login" class="pointer">&bull;Sign in</a></li>
+                <li><a id="register" class="pointer">&bull;Register</a></li>
             </ul>
             <script>
             	jQuery("#topbar a").click(function(){
@@ -54,6 +54,22 @@
 	          					}
 	          				});
                 		}
+                	});
+                	
+                	
+                	jQuery(".search-button").on('click',function(){
+                		var searchKey=jQuery("#searchInput").val();
+                		jQuery.ajax({
+          					url:"itemsContent.htm?search="+searchKey,
+          					success:function(data){
+          						//alert(data);
+          						jQuery("#itemsContaiiner").html(data);
+          						//jQuery(".middle").html(data)
+          					},
+          					error:function(){
+          						alert("Oops something went wrong!!");
+          					}
+          				});
                 	});
                 </script>
             </div>

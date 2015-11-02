@@ -86,5 +86,26 @@ public class HomeController {
 		mav.addObject("total", total);
 		return mav;
 	}
+	@RequestMapping("removeFromShoppingCart")
+	public ModelAndView removeFromShoppingCart(@RequestParam(value="id", required=false)String itemId,WebRequest request)
+	{
+		ModelAndView  mav=new ModelAndView("shoppingCart");
+		
+		ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+		if(itemId!=null){
+			Item item=(Item) WebKinmelServiceManager.find(Integer.parseInt(itemId), Item.class);
+			cart.getItems().remove(item);
+//			cart.getItems().remove(cart.getItems().get(Integer.parseInt(itemId)));
+			mav.addObject("cart",cart);
+			mav.addObject("cartItems",cart.getItems());
+		}
+		double total=0;
+		for (Item item : cart.getItems()) {
+			double itemprice=item.getPrice();
+			total=total+itemprice;
+		}
+		mav.addObject("total", total);
+		return mav;
+	}
 	
 }

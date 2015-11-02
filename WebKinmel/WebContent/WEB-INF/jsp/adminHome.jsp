@@ -12,8 +12,8 @@
 	<div class="wrapper">
     	<div id="topbar" class="topbar">
         	<ul class="topnav">
-            	<li><a id="login">&bull;Sign in</a></li>
-                <li><a id="register">&bull;Register</a></li>
+            	<li><a class="pointer" id="login">&bull;Sign in</a></li>
+                <li><a class="pointer" id="register">&bull;Register</a></li>
             </ul>
             <script>
             	jQuery("#topbar a").click(function(){

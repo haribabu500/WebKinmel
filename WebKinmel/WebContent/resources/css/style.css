@@ -222,7 +222,10 @@ body
 	color:#CC3000;
 	font-weight:bold;
 }
-
+.pointer
+{
+	cursor:pointer;
+}
 .footer{background:url(/WebKinmel/resources/image/bg_footer.jpg); height:338px;}
 .upper-footer{height:70px; }
 .lower-footer{background:height:268px; padding:0 20px}
