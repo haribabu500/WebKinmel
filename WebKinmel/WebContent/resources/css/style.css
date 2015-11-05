@@ -10,6 +10,7 @@ body
 	width:1000px;
 	margin:0 auto;
 	margin-top:9px;
+	/* margin-top:2px; */
 	height:auto;
 	/*background:#AA5FFF;*/
 }
@@ -24,6 +25,7 @@ body
 .topnav
 {
 	padding-left:0px;	
+	margin-bottom: 0px;
 }
 .topnav li,.signout
 {
@@ -229,6 +231,7 @@ body
 {
 	cursor:pointer;
 }
+.shopping_cart_row{border-bottom:2px #e5e5e5 solid;}
 .footer{background:url(/WebKinmel/resources/image/bg_footer.jpg); height:338px;}
 .upper-footer{height:70px; }
 .lower-footer{background:height:268px; padding:0 20px}
@@ -240,3 +243,4 @@ body
 
 
 tr{transition: background-color 2s linear;}/* this is for animation after adding an item */
+div.modal-content{border-radius: 20px;}/* for modal dialof in register and login */

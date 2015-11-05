@@ -15,7 +15,13 @@
 			success:function(data){
 				//jQuery(".middle").html(data);itemsContaiiner
 				jQuery("#itemsContaiiner").html(data);
-				location.href="#itemsContaiiner";
+				//location.href="#itemsContaiiner";
+				
+				jQuery('html, body').animate({
+			        scrollTop: $("#itemsContaiiner").offset().top
+			    }, 1000);
+				
+				
 			},
 			error:function(){
 				alert("oops something went wrong!!!");

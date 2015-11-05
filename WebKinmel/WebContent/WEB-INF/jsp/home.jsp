@@ -7,33 +7,25 @@
 <link type="text/css" href="/WebKinmel/resources/css/style.css" rel="stylesheet" />
 <link type="text/css" href="/WebKinmel/resources/css/bootstrap.css" rel="stylesheet" />
 <script src="/WebKinmel/resources/js/jquery.js"></script>   
+<script src="/WebKinmel/resources/js/bootstrap.js"></script>   
 </head>
 
 <body>
 	<div class="wrapper">
     	<div class="topbar" id="topbar">
-    	<div class="left">
-        	<ul class="topnav">
-            	<li><a id="login" class="pointer">&bull;Sign in</a></li>
-                <li><a id="register" class="pointer">&bull;Register</a></li>
-            </ul>
-            <script>
-            	jQuery("#topbar a").click(function(){
-            		var url="login/"+jQuery(this).attr("id")+".htm";
-            		jQuery.ajax({
-            			url:url,
-            			success:function(data){
-            				//alert(data);
-            				jQuery(".mainContent").html(data);
-            			}
-            		});
-            	});
-            </script>
-            </div>
-            <div class="left">
-            	<a class="signout" id="logout" href="login/logout.htm" class="pointer">&bull;Sign out</a>
-            </div>
+    		<script type="text/javascript">
+    			jQuery.ajax({
+    				url:"topbarContent.htm",
+    				success:function(data){
+    					jQuery("#topbar").html(data);
+    				},
+    				error:function(){
+    					alert("oops!! something went wrong");
+    				}
+    			});
+    		</script>
 		</div>
+		<div class="clear"></div>
         <div class="logobar">
         	<div class="logo">
             	<img src="/WebKinmel/resources/image/logo2.png" height="100" />

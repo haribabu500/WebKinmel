@@ -16,7 +16,7 @@ import com.hari.model.Item;
 import com.hari.model.ShoppingCart;
 import com.hari.model.User;
 
-@SessionAttributes(value={"username","cart"})
+@SessionAttributes(value={"loggedInUser","username","cart"})
 
 @Controller
 public class LoginController {
@@ -48,6 +48,11 @@ public class LoginController {
 		String username=user.getUsername();
 		String password=user.getPassword();
 		List users=WebKinmelServiceManager.select("select u from User u where u.username='"+username+"' and u.password='"+password+"'", User.class);
+		if(users.size()==0){
+			ModelAndView mav=new ModelAndView("message");
+			mav.addObject("message","invalid");
+			return mav;
+		}
 		User loggedInUser=(User) users.get(0);
 		System.out.println(loggedInUser.getFirstname()+" "+loggedInUser.getLastname()+"==>"+loggedInUser.getRole());
 
@@ -58,6 +63,7 @@ public class LoginController {
 		ModelAndView mav=new ModelAndView("home");
 		mav.addObject("cart",cart);
 		mav.addObject("username", loggedInUser.getUsername());
+		mav.addObject("loggedInUser", loggedInUser);
 		return mav;
 	}
 	

@@ -11,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hari.data.WebKinmelServiceManager;
+import com.hari.model.CartItem;
 import com.hari.model.Category;
 import com.hari.model.Item;
 import com.hari.model.Manufacturer;
@@ -37,7 +38,11 @@ public class HomeController {
 		}
 		return mav;
 	}
-	
+	@RequestMapping("topbarContent")
+	public ModelAndView topbarContent(){
+		ModelAndView mav=new ModelAndView("topbarContent");
+		return mav;
+	}
 	@RequestMapping("itemsContent")
 	public ModelAndView itemsContent(@RequestParam(value="category", required=false)String queryCategory,
 									@RequestParam(value="manufacturer",required=false)String queryManufacturer,
@@ -116,4 +121,43 @@ public class HomeController {
 		return mav;
 	}
 	
+	@RequestMapping("checkout")
+	public ModelAndView checkout(WebRequest request){
+		ModelAndView mav=new ModelAndView("checkout");
+		ShoppingCart sessionCart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+		
+		//===========codes to transfer repeating items to its respected numbers==========
+		List items=sessionCart.getItems();
+		List cartItems=new ArrayList<CartItem>();
+		List oldList=new ArrayList<Item>();
+		for (Object object : items) {
+			Item item=(Item) object;
+			oldList.add(item);
+		}
+		
+		for (Object object : items) {
+			Item item=(Item)object;
+			int count=0;
+			for (int i = 0; i < oldList.size(); i++) {
+				if(oldList.get(i)!=null){
+					if(((Item)(oldList.get(i))).getId()==item.getId()){
+						count++;
+						oldList.set(i, null);
+					}
+				}
+			}
+			if(count!=0){
+				CartItem cartItem=new CartItem();
+				cartItem.setItem(item);
+				cartItem.setQuantity(count);
+				cartItems.add(cartItem);
+			}
+			
+		}
+		
+		
+		//=================================================================
+		mav.addObject("cartItems", cartItems);
+		return mav;
+	}
 }
