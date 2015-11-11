@@ -1,9 +1,11 @@
 package com.hari.model;
 
 import java.beans.Transient;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +18,9 @@ public class Item extends WebKinmelObject {
 	private String category;
 	private String imagePath;
 	private int quantity;
+	@Temporal(value=TemporalType.TIMESTAMP)
+	private Date addedDate;
+	
 	public String getCategory() {
 		return category;
 	}
@@ -65,5 +70,11 @@ public class Item extends WebKinmelObject {
 	}
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	public Date getAddedDate() {
+		return addedDate;
+	}
+	public void setAddedDate(Date addedDate) {
+		this.addedDate = addedDate;
 	}
 }

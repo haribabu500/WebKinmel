@@ -101,7 +101,7 @@
         	<div>
 				<!-- ========================================================================== -->
             	<div class="side">
-                        <div class="myPanel myPanel_category">
+                        <div id="categoroes" class="myPanel myPanel_category">
                             <div class="myPanel-heading">Categories</div>
                             <div class="myPanel-body">
                             	<c:forEach var="category" items="${categories}">
@@ -126,19 +126,8 @@
                           		</script>
                             </div>
                         </div>
-                        <div class="myPanel">
-                                <div class="myPanel-heading">Viewed Products</div>
-                                <div class="myPanel-body">
-                                    <b>Test Product</b><br />
-                                    <p>Lorem ispum and blah blah blah</p>
-									<select>
-										<option>All manufacturers</option>
-										<option>to be added</option>
-									</select>
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
                         
-						<div class="myPanel">
+						<div id="manufacturers" class="myPanel">
                                 <div class="myPanel-heading">Manufacturers</div>
                                 <div class="myPanel-body">
                                 	<c:forEach var="manufacturer" items="${manufacturers}">
@@ -166,7 +155,7 @@
                             </div><!-- End of panel body-->
                         </div><!-- End of myPanel-->
 						
-                        <div class="myPanel">
+                        <div id="information" class="myPanel">
                                 <div class="myPanel-heading">Information</div>
                                 <div class="myPanel-body">
                                     <p>Delivery</p>
@@ -179,18 +168,18 @@
                             </div><!-- End of panel body-->
                         </div><!-- End of myPanel-->
                         
-                         <div class="myPanel">
+                         <!-- <div class="myPanel">
                                 <div class="myPanel-heading">Tags</div>
                                 <div class="myPanel-body">
                                     <p>apple ipod Ipod touch suffle superdrive nano</p>
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
+                            </div>End of panel body
+                        </div>End of myPanel -->
                 </div>
 				<!-- ========================================================================== -->
 				<!-- ========================================================================== -->
          		
                 <div class="middle">
-                	<div class="banner"><img src="/WebKinmel/resources/image/banner.jpg" width="580"/></div>
+                	<div class="banner"><img src="/WebKinmel/resources/image/banner1.jpg" width="580"/></div>
                     <div class="clear"></div>
                     <div id="itemsContaiiner">
                     	<script>
@@ -222,54 +211,77 @@
                 				}
                 			});
                 		</script>
-                        <!-- <div class="myPanel">
-                                <div class="myPanel-heading">Shoping Cart</div>
-                                <div class="myPanel-body">
-                                    <div class="cart-content">
-                                        No Products
-                                    </div>
-                                    <div class="cart-content">
-                                        <div>
-                                            <div class="left">Shipping</div>
-                                            <div class="right"><b>$0.00</b></div>
-                                        </div>
-                                        <div class="clear"></div>
-										<div>
-											<div class="left">Total</div>
-											<div class="right"><b>$0.00</b></div>
-										</div>
-										<div class="clear"></div>
-									</div>
-									<div class="small">Prices are tax included</div>
-									<div class="">
-										<button class="myButton">Cart</button>
-										<button class="myButton">Check out</button>
-									</div>
-								</div>End of panel body
-                        </div>End of myPanel -->
-						 <div class="myPanel">
+                       
+						 <div id="newProducts" class="myPanel">
                                 <div class="myPanel-heading">New Products</div>
                                 <div class="myPanel-body">
-                                    <p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
+                                	<c:forEach var="item" items="${newProducts}">
+                                		<p class="pointer newItems" id="${item.id}"><b>${item.name}</b><br/>${item.description }</p>
+                                	</c:forEach>
 									
-									<p><button class="myButton full-button">All new products</button></p>
+									<p><button id="allNewProducts" class="myButton full-button">All new products</button></p>
+									<script>
+										jQuery(".newItems").on('click',function(){
+											var itemId=jQuery(this).attr('id');
+											jQuery.ajax({
+												url:"itemDescription.htm?itemId="+itemId,
+												success:function(data){
+													//jQuery(".middle").html(data);itemsContaiiner
+													jQuery("#itemsContaiiner").html(data);
+													//location.href="#itemsContaiiner";
+													
+													jQuery('html, body').animate({
+												        scrollTop: $("#itemsContaiiner").offset().top
+												    }, 1000);
+													
+													
+												},
+												error:function(){
+													alert("oops something went wrong!!!");
+												}
+											});
+										});
+										
+										jQuery("#allNewProducts").click(function(){
+											jQuery.ajax({
+	                          					url:"itemsContent.htm?newProducts=newProducts",
+	                          					success:function(data){
+	                          						//alert(data);
+	                          						jQuery("#itemsContaiiner").html(data);
+	                          					},
+	                          					error:function(){
+	                          						alert("Oops something went wrong!!");
+	                          					}
+	                          				});
+										});
+									</script>
 								</div><!-- End of panel body-->
                         </div><!-- End of myPanel-->
+                        
+                         <div id="viewedProducts" class="myPanel">
+                                <div class="myPanel-heading">Viewed Products</div>
+                                <div class="myPanel-body">
+                                    <b>Test Product</b><br />
+                                    <p>Lorem ispum and blah blah blah</p>
+									<select>
+										<option>All manufacturers</option>
+										<option>to be added</option>
+									</select>
+                            </div><!-- End of panel body-->
+                        </div><!-- End of myPanel-->
 						
+						<!-- 
 						<div class="myPanel">
                                 <div class="myPanel-heading">Specials</div>
                                 <div class="myPanel-body">
                                     <p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
 									
 									<p class="centre"><button class="myButton full-button">All specials</button></p>
-								</div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
+								</div>End of panel body
+                        </div>End of myPanel
+						 -->
 						
-						<div class="myPanel">
+						<div id="ourStores" class="myPanel">
                                 <div class="myPanel-heading">Our Stores</div>
                                 <div class="myPanel-body">
                                     <p>discover our stores</p>

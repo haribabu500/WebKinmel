@@ -30,7 +30,8 @@ public class HomeController {
 		mav.addObject("categories", categories);	
 		List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
 		mav.addObject("manufacturers", manufacturers);
-		
+		List newProducts=WebKinmelServiceManager.select("select i from Item i", Item.class);
+		mav.addObject("newProducts", newProducts);
 		/*This shopping should be added after the successful login to the system*/
 		ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
 		if(cart!=null){
@@ -46,7 +47,8 @@ public class HomeController {
 	@RequestMapping("itemsContent")
 	public ModelAndView itemsContent(@RequestParam(value="category", required=false)String queryCategory,
 									@RequestParam(value="manufacturer",required=false)String queryManufacturer,
-									@RequestParam(value="search",required=false)String querySearch){
+									@RequestParam(value="search",required=false)String querySearch,
+									@RequestParam(value="newProducts",required=false)String newProducts){
 		ModelAndView mav=new ModelAndView("itemsContent");
 		List items=WebKinmelServiceManager.select("select i from Item i", Item.class);
 		mav.addObject("items", items);
@@ -60,6 +62,10 @@ public class HomeController {
 		}
 		if(querySearch!=null){
 			List newItems=WebKinmelServiceManager.select("select i from Item i where i.name like '%"+querySearch+"%'", Item.class);
+			mav.addObject("items", newItems);
+		}
+		if(newProducts!=null){
+			List newItems=WebKinmelServiceManager.select("select i from Item i ORDER BY i.addedDate desc", Item.class);
 			mav.addObject("items", newItems);
 		}
 		return mav;

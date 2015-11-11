@@ -3,6 +3,7 @@ package com.hari.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,25 +79,38 @@ public class AdminController {
 				
 				
 				
-//				String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
-				String imagePath="/Users/hari/git/local_WebKinmel/WebKinmel/WebContent/resources/upload/"+fileName;
-				File f=new File(imagePath);
-				formItem.setImagePath("/WebKinmel"+imagePath.substring(imagePath.indexOf("/resources")));
-				formItem.setFile(null);
-				FileOutputStream fos=new FileOutputStream(f);
-				fos.write(uploadedFile.getBytes());
-				fos.flush();
-				fos.close();
-				f.createNewFile();
+
+				//-- if uploaded file is empty
+				if(fileName!=""){
+//					String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
+					String imagePath="/Users/hari/git/local_WebKinmel/WebKinmel/WebContent/resources/upload/"+fileName;
+					File f=new File(imagePath);
+					formItem.setImagePath("/WebKinmel"+imagePath.substring(imagePath.indexOf("/resources")));
+					formItem.setFile(null);
+					FileOutputStream fos=new FileOutputStream(f);
+					fos.write(uploadedFile.getBytes());
+					fos.flush();
+					fos.close();
+					f.createNewFile();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("==>>The uploaded file cound not be saved");
 			}
 		}
 		if(formItem.isPersisted()){
+			
+			// to be done if no image
+			String fileName=uploadedFile.getOriginalFilename();
+			if(fileName==""){
+				Item i=(Item) WebKinmelServiceManager.find(formItem.getId(), Item.class);
+				formItem.setImagePath(i.getImagePath());//transferring old image path if no image path found
+			}
 			WebKinmelServiceManager.update(formItem);
 		}
 		else{
+			Date date=new Date();
+			formItem.setAddedDate(date);
 			WebKinmelServiceManager.save(formItem);
 		}
 		System.out.println("object"+formItem+" saved");
