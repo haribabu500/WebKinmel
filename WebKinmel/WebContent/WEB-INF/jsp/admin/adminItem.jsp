@@ -109,8 +109,8 @@
 		        contentType: false,
 		        processData: false,
 		        success: function (data) {
-		        $("#mainContent").html(data);
 		        alert("Successfully added!!!");
+		        $("#mainContent").html(data);
 		        },
 		        error: function(){
 		            alert("oops something went wrong!!!!!");
@@ -124,6 +124,10 @@
 		 jQuery.ajax({
 			url:"admin/adminItem.htm?id="+jQuery(this).parent().attr("id"),
 			success:function(data){
+				//location.href="#mainContent";
+				jQuery('html, body').animate({
+			        scrollTop: $("#mainContent").offset().top
+			    }, 1000);
 				jQuery("#mainContent").html(data);
 			}
 		}); 

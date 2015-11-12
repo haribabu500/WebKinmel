@@ -3,9 +3,9 @@
 	<persistence-unit name="WEB_KINMEL" transaction-type="RESOURCE_LOCAL">
 		<class>com.hari.model.User</class>
 		<class>com.hari.model.Item</class>
-		<class>com.hari.model.Stock</class>
 		<class>com.hari.model.Category</class>
 		<class>com.hari.model.Manufacturer</class>
+		<class>com.hari.model.Orders</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/webKinmel"/>
 			<property name="javax.persistence.jdbc.user" value="root"/>

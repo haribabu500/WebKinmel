@@ -1,6 +1,7 @@
 package com.hari.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -15,13 +16,14 @@ import com.hari.model.CartItem;
 import com.hari.model.Category;
 import com.hari.model.Item;
 import com.hari.model.Manufacturer;
+import com.hari.model.Orders;
 import com.hari.model.ShoppingCart;
+import com.hari.model.User;
 
 @SessionAttributes(value={"username","cart"})
 
 @Controller
 public class HomeController {
-	
 	
 	@RequestMapping("home")
 	public ModelAndView home(WebRequest request){
@@ -30,7 +32,7 @@ public class HomeController {
 		mav.addObject("categories", categories);	
 		List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
 		mav.addObject("manufacturers", manufacturers);
-		List newProducts=WebKinmelServiceManager.select("select i from Item i", Item.class);
+		List newProducts=WebKinmelServiceManager.select("select i from Item i ORDER BY i.addedDate DESC", Item.class);
 		mav.addObject("newProducts", newProducts);
 		/*This shopping should be added after the successful login to the system*/
 		ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
@@ -92,6 +94,7 @@ public class HomeController {
 		if(itemId!=null){
 			Item item=(Item) WebKinmelServiceManager.find(Integer.parseInt(itemId), Item.class);
 			cart.getItems().add(item);
+			cart.setTotal(cart.getTotal()+item.getPrice());
 		}
 		double total=0;
 		if(cart!=null){
@@ -161,9 +164,27 @@ public class HomeController {
 			
 		}
 		
-		
 		//=================================================================
 		mav.addObject("cartItems", cartItems);
+		return mav;
+	}
+	
+	@RequestMapping("placeOrder")
+	public ModelAndView placeOrder(WebRequest request){
+		ShoppingCart sessionCart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+		User user=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
+		List<Item> items=sessionCart.getItems();
+		Date today=new Date();
+		Orders orders=new Orders();
+		orders.setItems(sessionCart.getItems());
+		orders.setDate(new Date());
+		orders.setUser(user);
+		WebKinmelServiceManager.save(orders);
+		System.out.println("Done!!!");
+		sessionCart.setItems(new ArrayList<Item>());
+		sessionCart.setTotal(0);
+		sessionCart.setIsEmpty(true);	
+		ModelAndView mav=new ModelAndView("redirect:home.htm");
 		return mav;
 	}
 }

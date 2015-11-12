@@ -106,6 +106,8 @@ public class AdminController {
 				Item i=(Item) WebKinmelServiceManager.find(formItem.getId(), Item.class);
 				formItem.setImagePath(i.getImagePath());//transferring old image path if no image path found
 			}
+			Date date=new Date();
+			formItem.setAddedDate(date);
 			WebKinmelServiceManager.update(formItem);
 		}
 		else{

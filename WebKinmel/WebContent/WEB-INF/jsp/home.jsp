@@ -215,8 +215,21 @@
 						 <div id="newProducts" class="myPanel">
                                 <div class="myPanel-heading">New Products</div>
                                 <div class="myPanel-body">
-                                	<c:forEach var="item" items="${newProducts}">
-                                		<p class="pointer newItems" id="${item.id}"><b>${item.name}</b><br/>${item.description }</p>
+                                	<c:forEach var="item" items="${newProducts}" varStatus="status">
+                                		
+                                		<c:if test="${status.index<5}">
+                                			<div class="pointer newItems" id="${item.id}">
+                                				<div class="left">
+                                					<p>
+                                						<b>${item.name}</b><br/>
+                                						${item.description }
+                                					</p>
+                                				</div>
+                                				<div class="right"><img src="${item.imagePath}" height="20" /></div>
+                                				
+                                			</div>
+                                		</c:if>
+                                		<%-- <p class="pointer newItems" id="${item.id}"><b>${item.name}</b><br/>${item.description }</p> --%>
                                 	</c:forEach>
 									
 									<p><button id="allNewProducts" class="myButton full-button">All new products</button></p>

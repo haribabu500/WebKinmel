@@ -171,6 +171,15 @@ body
 .centre{text-align:centre;}
 .clear{clear:both;}
 .small{font-size:6px;}
+.my-bordered
+{
+	background-color: #fff;
+	border:1px solid #ddd;
+	border-radius: 4px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	padding:5px;
+}
 .myButton
 {
 	background:url(/WebKinmel/resources/image/button_bg.jpg);
