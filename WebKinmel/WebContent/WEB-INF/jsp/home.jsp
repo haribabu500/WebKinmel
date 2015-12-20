@@ -1,8 +1,8 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="UTF-8">
 <title>WebKinmel</title>
 <link type="text/css" href="/WebKinmel/resources/css/style.css" rel="stylesheet" />
 <link type="text/css" href="/WebKinmel/resources/css/bootstrap.css" rel="stylesheet" />
@@ -219,14 +219,14 @@
                                 		
                                 		<c:if test="${status.index<5}">
                                 			<div class="pointer newItems" id="${item.id}">
-                                				<div class="left">
+                                				<div class="left" style="width:120px;">
                                 					<p>
                                 						<b>${item.name}</b><br/>
                                 						${item.description }
                                 					</p>
                                 				</div>
-                                				<div class="right"><img src="${item.imagePath}" height="20" /></div>
-                                				
+                                				<div class="right"><img src="${item.imagePath}" width="20" /></div>
+                                				<div class="clear"></div>
                                 			</div>
                                 		</c:if>
                                 		<%-- <p class="pointer newItems" id="${item.id}"><b>${item.name}</b><br/>${item.description }</p> --%>

@@ -5,28 +5,33 @@
 <title>WebKinmel</title>
 <link type="text/css" href="/WebKinmel/resources/css/style.css" rel="stylesheet" />
 <link type="text/css" href="/WebKinmel/resources/css/bootstrap.css" rel="stylesheet" />
-<script src="/WebKinmel/resources/js/jquery.js"></script>  
+<script src="/WebKinmel/resources/js/jquery.js"></script> 
+<script src="/WebKinmel/resources/js/bootstrap.js"></script>   
+<script type="text/javascript">
+/* script to disable unwanted enter key event on form submit */
+function stopRKey(evt) { 
+  var evt = (evt) ? evt : ((event) ? event : null); 
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+  if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+} 
+document.onkeypress = stopRKey; 
+</script> 
 </head>
 
 <body>
 	<div class="wrapper">
     	<div id="topbar" class="topbar">
-        	<ul class="topnav">
-            	<li><a class="pointer" id="login">&bull;Sign in</a></li>
-                <li><a class="pointer" id="register">&bull;Register</a></li>
-            </ul>
-            <script>
-            	jQuery("#topbar a").click(function(){
-            		var url="login/"+jQuery(this).attr("id")+".htm";
-            		jQuery.ajax({
-            			url:url,
-            			success:function(data){
-            				//alert(data);
-            				jQuery(".mainContent").html(data);
-            			}
-            		});
-            	});
-            </script>
+        	<script type="text/javascript">
+    			jQuery.ajax({
+    				url:"topbarContent.htm",
+    				success:function(data){
+    					jQuery("#topbar").html(data);
+    				},
+    				error:function(){
+    					alert("oops!! something went wrong");
+    				}
+    			});
+    		</script>
 		</div>
         <div class="logobar">
         	<div class="logo">
@@ -35,7 +40,35 @@
             <div class="searchBox">
             	
                 <button class="search-button">GO</button>
-                <input class="search-input" placeholder="Search website" />
+                <input id="searchInput" class="search-input" placeholder="Search website" />
+                <script>
+                	function processSearch(){
+                		var search_key=jQuery("#searchInput").val();
+                		var search_url=jQuery("#mainContent").attr("name");
+                		var url="admin/"+search_url+".htm?search="+search_key;
+                		console.log(url);
+                		
+                		jQuery.ajax({
+                			url:url,
+                			success:function(data){
+                				jQuery("#mainContent").html(data);
+                				/* console.log(data); */
+                			},
+                			error:function(data){
+                				alert("OOps sopenting went wrong@!!!!");
+                			}
+                		}); 
+                	}
+                	jQuery(".search-button").on('click',function(){
+                		processSearch();
+                	});
+                	jQuery("#searchInput").on("keyup",function(e){
+                		var code=e.which;
+                		if(code==13){
+                			processSearch();
+                		}
+                	});
+                </script>
             </div>
         </div>
         <div class="menubar">
@@ -45,129 +78,13 @@
                 <li><a href="#" name="adminCategory">CATEGORIES</a></li>
                 <li><a href="#" name="adminManufacturer">MANUFACTURERS</a></li>
                 <li><a href="#" name="adminUser">USERS</a></li>
+                <li><a href="#" name="adminOrders">ORDERS</a></li>
+                <li><a href="#" name="adminReports">REPORTS</a></li>
             </ul>
         </div>
         <br clear="all" />
-        <%-- <p>Recent Object:${recent}</p> --%>
         <div class="mainContent" id="mainContent">  
-        	<div>
-				<!-- ========================================================================== -->
-            	<div class="side">
-                        <div class="myPanel myPanel_category">
-                            <div class="myPanel-heading">Categories</div>
-                            <div class="myPanel-body">
-                                <div class="category_list"><a href="#">Category1</a></div>
-                                <div class="category_list"><a href="#">Category2</a></div>
-                                <div class="category_list"><a href="#">Category3</a></div>
-                                <div class="category_list"><a href="#">Category4</a></div>
-                                <div class="category_list"><a href="#">Category5</a></div>
-                                <div class="category_list"><a href="#">Category6</a></div>
-                                <div class="category_list"><a href="#">Category7</a></div>
-                            </div>
-                        </div>
-                        <div class="myPanel">
-                                <div class="myPanel-heading">Viewed Products</div>
-                                <div class="myPanel-body">
-                                    <b>Test Product</b><br />
-                                    <p>Lorem ispum and blah blah blah</p>
-									<select>
-										<option>All manufacturers</option>
-										<option>to be added</option>
-									</select>
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-                        
-						<div class="myPanel">
-                                <div class="myPanel-heading">Manufacturers</div>
-                                <div class="myPanel-body">
-                                    <p>>>Apple Computers Inc.</p>
-                                    <p>>>Shure Incorporate</p>
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-						
-                        <div class="myPanel">
-                                <div class="myPanel-heading">Information</div>
-                                <div class="myPanel-body">
-                                    <p>Delivery</p>
-                                    <p>Legal Notice</p>
-									<p>Terms and conditions of use</p>
-									<p>About us</p>
-									<p>Secure Payment</p>
-									<p>Our Stores</p>
-									
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-                        
-                         <div class="myPanel">
-                                <div class="myPanel-heading">Tags</div>
-                                <div class="myPanel-body">
-                                    <p>apple ipod Ipod touch suffle superdrive nano</p>
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-                </div>
-				<!-- ========================================================================== -->
-				<!-- ========================================================================== -->
-         		
-                <div class="middle"></div>
-				<!-- ========================================================================== -->
-				<!-- ========================================================================== -->
-                <div class="side">
-                        <div class="myPanel">
-                                <div class="myPanel-heading">Shoping Cart</div>
-                                <div class="myPanel-body">
-                                    <div class="cart-content">
-                                        No Products
-                                    </div>
-                                    <div class="cart-content">
-                                        <div>
-                                            <div class="left">Shipping</div>
-                                            <div class="right"><b>$0.00</b></div>
-                                        </div>
-                                        <div class="clear"></div>
-										<div>
-											<div class="left">Total</div>
-											<div class="right"><b>$0.00</b></div>
-										</div>
-										<div class="clear"></div>
-									</div>
-									<div class="small">Prices are tax included</div>
-									<div class="">
-										<button class="myButton">Cart</button>
-										<button class="myButton">Check out</button>
-									</div>
-								</div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-						 <div class="myPanel">
-                                <div class="myPanel-heading">New Products</div>
-                                <div class="myPanel-body">
-                                    <p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									<p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									
-									<p><button class="myButton full-button">All new products</button></p>
-								</div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-						
-						<div class="myPanel">
-                                <div class="myPanel-heading">Specials</div>
-                                <div class="myPanel-body">
-                                    <p><b>Test Product</b><br/>Lorem ipsum dolor sit amet, consectetur......>></p>
-									
-									<p class="centre"><button class="myButton full-button">All specials</button></p>
-								</div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-						
-						<div class="myPanel">
-                                <div class="myPanel-heading">Our Stores</div>
-                                <div class="myPanel-body">
-                                    <p>discover our stores</p>
-								</div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
-                </div><!-- End of side-->
-				<!-- ========================================================================== -->
-            </div>
+        	
         </div>
     </div>
 	<div class="clear"></div>
@@ -229,23 +146,21 @@
 		url:"admin/adminItem.htm",
 		success:function(data){
 			jQuery("#mainContent").html(data);
+			jQuery("#mainContent").attr("name","adminItem");
 		}
 	}); 
 </script>
 <script>
 	jQuery(".menubar a").click(function(){
-		//alert("test");
-		//jQuery(".nav-pills li").removeClass("active");
-		//jQuery(this).parent().addClass("active");
-		
+		var name=jQuery(this).attr("name");
 		jQuery.ajax({
 			url:"admin/"+jQuery(this).attr("name")+	".htm",
 			success:function(data){
 				jQuery("#mainContent").html(data);
+				jQuery("#mainContent").attr("name",name);
 			}
 		}); 
 	});
-	
 </script>
 </body>
 </html>

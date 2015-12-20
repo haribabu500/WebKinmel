@@ -38,16 +38,25 @@
 
 <script>
 	jQuery("#addCategory").click(function(){
+		alert("test");
 		jQuery.post('admin/addCategoryAction.htm',jQuery("#addCategoryForm").serialize(),function(data){
-			//alert(data);
 			jQuery("#mainContent").html(data);
 		});
+	});
+	
+	jQuery("#addCategoryForm input").keydown(function(e){
+		var code=e.which;
+		if(code==13){
+			jQuery.post('admin/addCategoryAction.htm',jQuery("#addCategoryForm").serialize(),function(data){
+				jQuery("#mainContent").html(data);
+			});
+		}
 	});
 	
 	
 	jQuery("table tr .update").click(function(){
 		 jQuery.ajax({
-			url:"admin/adminCategory.htm?id="+jQuery(this).parent().attr("id"),
+			url:"admin/adminCategory.htm?id="+jQuery(this).parent().attr("id")+"&search="+jQuery("#searchInput").val(),
 			success:function(data){
 				jQuery("#mainContent").html(data);
 			}

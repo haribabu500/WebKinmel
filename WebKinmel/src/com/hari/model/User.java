@@ -13,6 +13,8 @@ public class User extends WebKinmelObject {
 	private String password;
 	@Transient
 	private String rePassword;
+	@Transient
+	private String oldPassword;
 	private String role;
 	
 	private String firstname;
@@ -66,6 +68,12 @@ public class User extends WebKinmelObject {
 	}
 	public void setRePassword(String rePassword) {
 		this.rePassword = rePassword;
+	}
+	public String getOldPassword() {
+		return oldPassword;
+	}
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
 	}
 	public String getCity() {
 		return city;

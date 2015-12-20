@@ -253,3 +253,5 @@ body
 
 tr{transition: background-color 2s linear;}/* this is for animation after adding an item */
 div.modal-content{border-radius: 20px;}/* for modal dialof in register and login */
+.reportnav{float: left;}
+.reportbody{float: left;}

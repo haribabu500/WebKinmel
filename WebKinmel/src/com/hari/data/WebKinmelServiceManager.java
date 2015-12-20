@@ -1,13 +1,19 @@
 package com.hari.data;
 
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
+import com.hari.model.CartItem;
 import com.hari.model.Category;
 import com.hari.model.Item;
 import com.hari.model.Manufacturer;
+import com.hari.model.Orders;
 import com.hari.model.User;
 
 public class WebKinmelServiceManager {
@@ -123,6 +129,108 @@ public class WebKinmelServiceManager {
 					+ "<td><button id='"+user.getId()+"' name='"+user+"'class='myButton delete'>Remove</button></td>"
 					+ "</tr>");
 		}
+		table=table.concat("</table>");
+		return table;
+	}
+
+	public static String getOrdersTable(List orders) {
+		String table="<table class='table table-hover'><thead><tr>"
+				+ "<th>Order id</th>"
+				+"<th>User</th>"
+				+ "<th>Date</th>"
+				+ "<th>Items</th>"
+				+ "<th></thead>";
+		for (Object object : orders) {
+			Orders order=(Orders) object;
+			List<CartItem> cartitems=order.getCartItems();
+			String itemTable="<table class='table table-hover'>";
+			itemTable=itemTable.concat("<tr><th>Item id</th>" 
+					+"<th>Item Name</th>"
+					+"<th></th>"
+					+"<th>Quantity</th>"
+					+"<th>Unit Price</th>"
+					+"<th>Amount</th>"
+					+"</tr>" );
+			double total=0;
+			for (CartItem cartItem : cartitems){
+				Item item=cartItem.getItem();
+				int quantity=cartItem.getQuantity();
+				double amount=quantity*item.getPrice();
+				itemTable=itemTable.concat("<tr>"+
+						"<td class='update'>"+item.getId()+"</td>"+
+						"<td class='update'>"+item.getName()+"</td>"+
+						"<td class='update'><img src='"+item.getImagePath()+"' height='20' /></td>"+
+						"<td class='update'>"+quantity+"</td>"+
+						"<td class='update'>"+item.getPrice()+"</td>"+
+						"<td class='update'>"+amount+"</td>"+
+						"</tr>");
+				total=total+amount;
+			}
+		itemTable=itemTable.concat("<td colspan='5'><b>Total</b></td><td><b>"+total+"</b></td>");
+		User user=order.getUser();
+		String userAddress=user.getStreet()+"</br>"+user.getStreet()+","+user.getCity();
+		itemTable=itemTable.concat("</table>");
+//			System.out.println(itemTable);
+			table=table.concat("<tr id='"+order.getId()+"'>"
+					+ "<td class='update'>"+order.getId()+"</td>"
+					+ "<td class='update'>"+order.getUser().getId()+"("+order.getUser().getFirstname()+" "+order.getUser().getLastname()+")"+
+											"<br>"+userAddress+"</td>"
+					+ "<td class='update'>"+new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(order.getDate())+"</td>"
+					+ "<td class='update'>"
+						+itemTable
+					+"</td>"
+//					+ "<td><button id='"+order.getId()+"' name='"+order+"'class='myButton delete'>Remove</button></td>"
+					+ "</tr>");
+		}
+		table=table.concat("</table>");
+		return table;
+	}
+
+	public static String getUserOrdersTable(List orders) {
+		String table="<table class='table table-hover'><thead><tr>"
+				+ "<th>Date</th>"
+				+ "<th>Items</th>"
+				+ "<th></thead>";
+		for (Object object : orders) {
+			Orders order=(Orders) object;
+			List<CartItem> cartitems=order.getCartItems();
+			String itemTable="<table class='table table-hover'>";
+			itemTable=itemTable.concat("<tr><th>Item id</th>" 
+					+"<th>Item Name</th>"
+					+"<th></th>"
+					+"<th>Quantity</th>"
+					+"<th>Unit Price</th>"
+					+"<th>Amount</th>"
+					+"</tr>" );
+			double total=0;
+			for (CartItem cartItem : cartitems){
+				Item item=cartItem.getItem();
+				int quantity=cartItem.getQuantity();
+				double amount=quantity*item.getPrice();
+				itemTable=itemTable.concat("<tr>"+
+						"<td class='update'>"+item.getId()+"</td>"+
+						"<td class='update'>"+item.getName()+"</td>"+
+						"<td class='update'><img src='"+item.getImagePath()+"' height='20' /></td>"+
+						"<td class='update'>"+quantity+"</td>"+
+						"<td class='update'>"+item.getPrice()+"</td>"+
+						"<td class='update'>"+amount+"</td>"+
+						"</tr>");
+				total=total+amount;
+			}
+		itemTable=itemTable.concat("<td colspan='5'><b>Total</b></td><td><b>"+total+"</b></td>");
+		User user=order.getUser();
+		String userAddress=user.getStreet()+"</br>"+user.getStreet()+","+user.getCity();
+		itemTable=itemTable.concat("</table>");
+//			System.out.println(itemTable);
+			table=table.concat("<tr id='"+order.getId()+"'>"
+					+ "<td class='update'>"+new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(order.getDate())+"</td>"
+					+ "<td class='update'>"
+						+itemTable
+					+"</td>"
+//					+ "<td><button id='"+order.getId()+"' name='"+order+"'class='myButton delete'>Remove</button></td>"
+					+ "</tr>");
+		}
+		table=table.concat("</table>");
 		return table;
 	}
 }

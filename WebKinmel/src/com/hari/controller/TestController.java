@@ -71,4 +71,10 @@ public class TestController {
 		ModelAndView mav=new ModelAndView("test/barChart");
 		return mav;
 	}
+	
+	@RequestMapping("test/newAdmin")
+	public ModelAndView newAdmin(){
+		ModelAndView mav=new ModelAndView("test/newAdmin");
+		return mav;
+	}
 }

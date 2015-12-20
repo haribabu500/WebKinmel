@@ -41,6 +41,9 @@
             		        		//alert('invalid username or password!!!');
             		        		jQuery("#login-error").removeClass("hidden");
             		        	}
+            		        	else if(data=="admin"){
+            		        		location.href="adminHome.htm";
+            		        	}
             		        	else{
             		        		/* location.href="home.htm"; */
             		        		jQuery.ajax({
@@ -72,6 +75,19 @@
                 			checkLogin();
                 		}
 					});
+					</script>
+					<script type="text/javascript">
+						document.onkeypress = processKey();
+						
+						function processKey(e)
+						{
+						if (null == e)
+						e = window.event ;
+						if (e.keyCode == 13) {
+						document.forms[0].submitButton[0].click();
+						return false;
+						}
+						}
 					</script>
 				</div>
 	</div><!-- End of panel body-->

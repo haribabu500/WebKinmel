@@ -6,6 +6,7 @@
 		<class>com.hari.model.Category</class>
 		<class>com.hari.model.Manufacturer</class>
 		<class>com.hari.model.Orders</class>
+		<class>com.hari.model.CartItem</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/webKinmel"/>
 			<property name="javax.persistence.jdbc.user" value="root"/>

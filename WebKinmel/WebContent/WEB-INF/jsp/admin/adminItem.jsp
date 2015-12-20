@@ -93,36 +93,41 @@
 </div>
 
 <script>
-	jQuery("#addItem").click(function(){
-		/* jQuery.post('admin/addItemAction.htm',jQuery("#addItemForm").serialize(),function(data){
-			//alert(data);
-			jQuery("#mainContent").html(data);
-		}); */
-		 var formData = new FormData(jQuery("#addItemForm")[0]);
+	function submitData(){
+		var formData = new FormData(jQuery("#addItemForm")[0]);
 
-		    $.ajax({
-		        url: 'admin/addItemAction.htm',
-		        type: 'POST',
-		        data: formData,
-		        async: false,
-		        cache: false,
-		        contentType: false,
-		        processData: false,
-		        success: function (data) {
-		        alert("Successfully added!!!");
-		        $("#mainContent").html(data);
-		        },
-		        error: function(){
-		            alert("oops something went wrong!!!!!");
-		            }
-		    });
-		
+	    $.ajax({
+	        url: 'admin/addItemAction.htm',
+	        type: 'POST',
+	        data: formData,
+	        async: false,
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+	        success: function (data) {
+	        alert("Successfully added!!!");
+	        $("#mainContent").html(data);
+	        },
+	        error: function(){
+	            alert("oops something went wrong!!!!!");
+	            }
+	    });
+	}
+	jQuery("#addItem").click(function(){
+		submitData();		
+	});
+	
+	jQuery("#addItemForm input,select").keydown(function(e){
+		var code=e.which;
+		if(code==13){
+			submitData();
+		}
 	});
 	
 	
 	jQuery("table tr .update").click(function(){
 		 jQuery.ajax({
-			url:"admin/adminItem.htm?id="+jQuery(this).parent().attr("id"),
+			url:"admin/adminItem.htm?id="+jQuery(this).parent().attr("id")+"&search="+jQuery("#searchInput").val(),
 			success:function(data){
 				//location.href="#mainContent";
 				jQuery('html, body').animate({

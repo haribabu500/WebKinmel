@@ -2,7 +2,9 @@ package com.hari.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,7 @@ import com.hari.model.Orders;
 import com.hari.model.ShoppingCart;
 import com.hari.model.User;
 
-@SessionAttributes(value={"username","cart"})
+@SessionAttributes(value={"username","cart","cartItems"})
 
 @Controller
 public class HomeController {
@@ -42,8 +44,12 @@ public class HomeController {
 		return mav;
 	}
 	@RequestMapping("topbarContent")
-	public ModelAndView topbarContent(){
+	public ModelAndView topbarContent(WebRequest request){
 		ModelAndView mav=new ModelAndView("topbarContent");
+		User user=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
+		if(user!=null&&!user.getRole().equalsIgnoreCase("admin")){
+			mav.addObject("myOrders", "<a id='myOrders'>&bull;My Orders</a>");
+		}
 		return mav;
 	}
 	@RequestMapping("itemsContent")
@@ -172,19 +178,34 @@ public class HomeController {
 	@RequestMapping("placeOrder")
 	public ModelAndView placeOrder(WebRequest request){
 		ShoppingCart sessionCart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+		List<CartItem> cartItems=(List) request.getAttribute("cartItems", WebRequest.SCOPE_SESSION);
 		User user=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
-		List<Item> items=sessionCart.getItems();
+		List<Item> sessionItems=sessionCart.getItems();
 		Date today=new Date();
 		Orders orders=new Orders();
-		orders.setItems(sessionCart.getItems());
+		orders.setCartItems(cartItems);
 		orders.setDate(new Date());
 		orders.setUser(user);
+//		orders.setItems(orderItems);
+		for (CartItem cartItem : cartItems) {
+			WebKinmelServiceManager.save(cartItem);
+		}
 		WebKinmelServiceManager.save(orders);
 		System.out.println("Done!!!");
 		sessionCart.setItems(new ArrayList<Item>());
 		sessionCart.setTotal(0);
 		sessionCart.setIsEmpty(true);	
 		ModelAndView mav=new ModelAndView("redirect:home.htm");
+		return mav;
+	}
+	
+	@RequestMapping("myOrders")
+	public ModelAndView myOrders(WebRequest request){
+		ModelAndView mav=new ModelAndView("myOrders");
+		User user=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
+		List list=WebKinmelServiceManager.select("select o from Orders o where o.user.id="+user.getId(), User.class);
+		String ordersTable=WebKinmelServiceManager.getUserOrdersTable(list);
+		mav.addObject("ordersTable", ordersTable);
 		return mav;
 	}
 }

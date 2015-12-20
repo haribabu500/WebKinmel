@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +24,22 @@ import com.hari.data.WebKinmelServiceManager;
 import com.hari.model.Category;
 import com.hari.model.Item;
 import com.hari.model.Manufacturer;
+import com.hari.model.Orders;
 import com.hari.model.User;
 
 @SessionAttributes(value={"goto","recent"})
 @Controller
 public class AdminController {
+	@Autowired
+    ServletContext context;
+	
 	@RequestMapping("adminHome")
 	public ModelAndView adminHome(WebRequest request,SessionStatus status){
+		User user=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
+		if(user==null||!user.getRole().equalsIgnoreCase("admin")){
+			ModelAndView mav=new ModelAndView("redirect:home.htm");
+			return mav;
+		}
 		ModelAndView mav=new ModelAndView("adminHome");
 		return mav;	
 		
@@ -47,22 +58,33 @@ public class AdminController {
 		mav.addObject("manufacturers", manufacturers);
 	}
 	@RequestMapping("admin/adminItem")
-	public ModelAndView adminItem(@RequestParam(value="id",required=false)String id){
+	public ModelAndView adminItem(@RequestParam(value="id",required=false)String id,
+			@RequestParam(value="search",required=false)String search){
 		ModelAndView mav=new ModelAndView("admin/adminItem");
 		if(id==null){
-			addItemContent(mav);
+//			addItemContent(mav);
+			Item item=new Item();
+			mav.addObject("item",item);
 		}
 		else{
 			Item item=(Item) WebKinmelServiceManager.find(Integer.parseInt(id), Item.class);
 			mav.addObject("item",item);
-			List items=WebKinmelServiceManager.select("Select i from Item i", Item.class);
-			String itemsTable=WebKinmelServiceManager.getItemsTable(items);
-			mav.addObject("itemsTable", itemsTable);
-			List categories=WebKinmelServiceManager.select("select c from Category c", Category.class);
-			mav.addObject("categories", categories);
-			List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
-			mav.addObject("manufacturers", manufacturers);
 		}
+		
+		List items=WebKinmelServiceManager.select("Select i from Item i", Item.class);
+		if(search!=null){
+			items=WebKinmelServiceManager.select("Select i from Item i " +
+					"where i.name like '%"+search+"%' " +
+					"OR i.manufacturer like '%"+search+"%'" +
+					"OR i.category like '%"+search+"%'" +
+					"", Item.class);
+		}
+		String itemsTable=WebKinmelServiceManager.getItemsTable(items);
+		mav.addObject("itemsTable", itemsTable);
+		List categories=WebKinmelServiceManager.select("select c from Category c", Category.class);
+		mav.addObject("categories", categories);
+		List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
+		mav.addObject("manufacturers", manufacturers);
 		return mav;	
 		
 	}
@@ -72,18 +94,13 @@ public class AdminController {
 		if(uploadedFile!=null){
 			String fileName=uploadedFile.getOriginalFilename();
 			try {
-//				String path=req.getContextPath();
-//				System.out.println(path);
-//				File file=new File(path+"/foo.txt");
-//				file.createNewFile();
-				
-				
-				
-
 				//-- if uploaded file is empty
 				if(fileName!=""){
-//					String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
+					//String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
+					String testpath=context.getRealPath("/");
+					System.out.println("==>"+testpath);
 					String imagePath="/Users/hari/git/local_WebKinmel/WebKinmel/WebContent/resources/upload/"+fileName;
+					System.out.println("==>>>"+imagePath);
 					File f=new File(imagePath);
 					formItem.setImagePath("/WebKinmel"+imagePath.substring(imagePath.indexOf("/resources")));
 					formItem.setFile(null);
@@ -116,7 +133,6 @@ public class AdminController {
 			WebKinmelServiceManager.save(formItem);
 		}
 		System.out.println("object"+formItem+" saved");
-//		ModelAndView mav=new ModelAndView("redirect:../adminHome.htm");
 		ModelAndView mav=new ModelAndView("admin/adminItem");
 		addItemContent(mav);
 		mav.addObject("recent", formItem);
@@ -141,18 +157,24 @@ public class AdminController {
 		mav.addObject("categoriesTable", categoriesTable);
 	}
 	@RequestMapping("admin/adminCategory")
-	public ModelAndView adminCategory(@RequestParam(value="id",required=false)String id){
+	public ModelAndView adminCategory(@RequestParam(value="id",required=false)String id,
+			@RequestParam(value="search",required=false)String search){
 		ModelAndView mav=new ModelAndView("admin/adminCategory");
 		if(id==null){
-			addCategoryContent(mav);
+//			addCategoryContent(mav);
+			Category category=new Category();
+			mav.addObject("category",category);
 		}
 		else{
 			Category category=(Category) WebKinmelServiceManager.find(Integer.parseInt(id), Category.class);
 			mav.addObject("category",category);
-			List categories=WebKinmelServiceManager.select("Select c from Category c", Category.class);
-			String categoriesTable=WebKinmelServiceManager.getCategoryTable(categories);
-			mav.addObject("categoriesTable", categoriesTable);
 		}
+		List categories=WebKinmelServiceManager.select("Select c from Category c", Category.class);
+		if(search!=null){
+			categories=WebKinmelServiceManager.select("Select c from Category c where c.name like '%"+search+"%' ", Category.class);
+		}
+		String categoriesTable=WebKinmelServiceManager.getCategoryTable(categories);
+		mav.addObject("categoriesTable", categoriesTable);
 		return mav;	
 		
 	}
@@ -189,18 +211,24 @@ public class AdminController {
 		mav.addObject("manufacturersTable", cmanufacturersTable);
 	}
 	@RequestMapping("admin/adminManufacturer")
-	public ModelAndView adminManufacturer(@RequestParam(value="id",required=false)String id){
+	public ModelAndView adminManufacturer(@RequestParam(value="id",required=false)String id,
+			@RequestParam(value="search",required=false)String search){
 		ModelAndView mav=new ModelAndView("admin/adminManufacturer");
 		if(id==null){
-			addManufacturerContent(mav);
+//			addManufacturerContent(mav);
+			Manufacturer manufacturer=new Manufacturer();
+			mav.addObject("manufacturer",manufacturer);
 		}
 		else{
 			Manufacturer manufacturer=(Manufacturer) WebKinmelServiceManager.find(Integer.parseInt(id), Manufacturer.class);
 			mav.addObject("manufacturer",manufacturer);
-			List manufacturers=WebKinmelServiceManager.select("Select m from Manufacturer m", Manufacturer.class);
-			String manufacturersTable=WebKinmelServiceManager.getManufacturerTable(manufacturers);
-			mav.addObject("manufacturersTable", manufacturersTable);
 		}
+		List manufacturers=WebKinmelServiceManager.select("Select m from Manufacturer m", Manufacturer.class);
+		if(search!=null){
+			manufacturers=WebKinmelServiceManager.select("Select m from Manufacturer m where m.name like '%"+search+"%'", Manufacturer.class);
+		}
+		String manufacturersTable=WebKinmelServiceManager.getManufacturerTable(manufacturers);
+		mav.addObject("manufacturersTable", manufacturersTable);
 		return mav;	
 		
 	}
@@ -228,9 +256,20 @@ public class AdminController {
 		
 	}
 	@RequestMapping("admin/adminUser")
-	public ModelAndView adminManufacturer(){
+	public ModelAndView adminManufacturer(@RequestParam(value="search",required=false)String search){
 		ModelAndView mav=new ModelAndView("admin/adminUser");
 			List userList=WebKinmelServiceManager.select("select u from User u where u.role='user'", User.class);
+			if(search!=null){
+				userList=WebKinmelServiceManager.select("select u from User u where u.role='user' and " +
+						"u.firstname like '%"+search+"%' " +
+						"OR u.lastname like '%"+search+"%' " +
+						"OR u.email like '%"+search+"%' " +
+						"OR u.username like '%"+search+"%' "+
+						"OR u.telephone like '%"+search+"%' "+
+						"OR u.country like '%"+search+"%' "+
+						"OR u.city like '%"+search+"%'"+
+						"", User.class);
+			}
 			String usersTable=WebKinmelServiceManager.getUsersTable(userList);
 			mav.addObject("usersTable", usersTable);
 			return mav;
@@ -245,4 +284,37 @@ public class AdminController {
 		mav.addObject("usersTable", usersTable);
 		return mav;
 	}	
+	
+	@RequestMapping("admin/adminOrders")
+	public ModelAndView adminOrders(@RequestParam(value="search",required=false)String search){
+		ModelAndView mav=new ModelAndView("admin/adminOrders");
+		List orders=WebKinmelServiceManager.select("select o from Orders o", Orders.class);
+		if(search!=null){
+//			"select o from Orders o join o.cartItems ci where ci.item.name like '%sam%' group by o.id"
+			orders=WebKinmelServiceManager.select("select o from Orders o join o.cartItems ci where " +
+					"o.id like '%"+search+"%'"+
+					"OR o.date like '%"+search+"%'"+
+					"OR o.user.firstname like '%"+search+"%' " +
+					"OR o.user.lastname like '%"+search+"%' " +
+					"OR o.user.email like '%"+search+"%' " +
+					"OR o.user.username like '%"+search+"%' "+
+					"OR o.user.telephone like '%"+search+"%' "+
+					"OR o.user.country like '%"+search+"%' "+
+					"OR o.user.city like '%"+search+"%'"+
+					"OR o.user.area like '%"+search+"%' "+
+					"OR o.user.street like '%"+search+"%' "+
+					"OR ci.item.name like '%"+search+"%'"+
+					"OR ci.item.id like '%"+search+"%'"+
+					"group by o.id", User.class);
+		}
+		String ordersTable=WebKinmelServiceManager.getOrdersTable(orders);
+		mav.addObject("ordersTable", ordersTable);
+		return mav;
+	}
+	
+	@RequestMapping("admin/adminReports")
+	public ModelAndView adminReports(){
+		ModelAndView mav=new ModelAndView("admin/adminReports");
+		return mav;
+	}
 }

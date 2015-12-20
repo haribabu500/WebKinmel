@@ -1,6 +1,9 @@
 package com.hari.model;
 
-public class CartItem{
+import javax.persistence.Entity;
+
+@Entity
+public class CartItem extends WebKinmelObject{
 	private Item item;
 	private int quantity;
 	public Item getItem() {

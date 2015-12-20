@@ -59,8 +59,14 @@ public class LoginController {
 		ShoppingCart cart=new ShoppingCart();
 		List items=new ArrayList<Item>();
 		cart.setItems(items);
-		
-		ModelAndView mav=new ModelAndView("home");
+		ModelAndView mav;
+		if(loggedInUser.getRole().equalsIgnoreCase("admin")){
+			mav=new ModelAndView("message");
+			mav.addObject("message","admin");
+		}
+		else{
+			 mav=new ModelAndView("home");
+		}
 		mav.addObject("cart",cart);
 		mav.addObject("username", loggedInUser.getUsername());
 		mav.addObject("loggedInUser", loggedInUser);
@@ -72,6 +78,31 @@ public class LoginController {
 		status.setComplete();
 		request.removeAttribute("username", WebRequest.SCOPE_SESSION);
 		ModelAndView mav=new ModelAndView("redirect:../home.htm");
+		return mav;
+	}
+	
+	@RequestMapping("login/changePassword")
+	public ModelAndView changePassword(WebRequest request,SessionStatus status){
+		ModelAndView mav=new ModelAndView("login/changePasword");
+		User user=new User();
+		mav.addObject("user", user);
+		return mav;
+	}
+	
+	@RequestMapping("login/changePasswordAction")
+	public ModelAndView changePasswordAction(@ModelAttribute("user")User formUser,WebRequest request,SessionStatus status){
+		User loggedInUser=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
+		if(formUser.getOldPassword().equals(loggedInUser.getPassword())){
+			if(formUser.getPassword().equals(formUser.getRePassword())){
+				loggedInUser.setPassword(formUser.getPassword());
+				WebKinmelServiceManager.update(loggedInUser);
+				status.setComplete();
+				request.removeAttribute("username", WebRequest.SCOPE_SESSION);
+			}
+		}
+		ModelAndView mav=new ModelAndView("login/changePasword");
+		User user=new User();
+		mav.addObject("user", user);
 		return mav;
 	}
 }

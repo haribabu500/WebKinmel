@@ -42,10 +42,19 @@
 		});
 	});
 	
+	jQuery("#addManufacturerForm input").keydown(function(e){
+		var code=e.which;
+		if(code==13){
+			jQuery.post('admin/addManufacturerAction.htm',jQuery("#addManufacturerForm").serialize(),function(data){
+				jQuery("#mainContent").html(data);
+			});
+		}
+	});
+	
 	
 	jQuery("table tr .update").click(function(){
 		 jQuery.ajax({
-			url:"admin/adminManufacturer.htm?id="+jQuery(this).parent().attr("id"),
+			url:"admin/adminManufacturer.htm?id="+jQuery(this).parent().attr("id")+"&search="+jQuery("#searchInput").val(),
 			success:function(data){
 				jQuery("#mainContent").html(data);
 			}
