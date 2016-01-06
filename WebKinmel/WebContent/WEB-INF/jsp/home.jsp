@@ -7,7 +7,9 @@
 <link type="text/css" href="/WebKinmel/resources/css/style.css" rel="stylesheet" />
 <link type="text/css" href="/WebKinmel/resources/css/bootstrap.css" rel="stylesheet" />
 <script src="/WebKinmel/resources/js/jquery.js"></script>   
-<script src="/WebKinmel/resources/js/bootstrap.js"></script>   
+<script src="/WebKinmel/resources/js/bootstrap.js"></script> 
+<script src="/WebKinmel/resources/js/validation/additional-methods.min.js"></script> 
+<script src="/WebKinmel/resources/js/validation/jquery.validate.min.js"></script> 
 </head>
 
 <body>
@@ -317,7 +319,7 @@
     				Specials<br />
     				Cart<br />
     			</div>
-    			<div class="lower-footer-divider">
+    			<!-- <div class="lower-footer-divider">
     				Home page<br />
     				New Arrivals<br />
     				Top Sellers<br />
@@ -337,7 +339,7 @@
     				Top Sellers<br />
     				Specials<br />
     				Cart<br />
-    			</div>
+    			</div> -->
     			<div class="clear"></div>
     			<div class="lower-footer-centre">
     				<p>

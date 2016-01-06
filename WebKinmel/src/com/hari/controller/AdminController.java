@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.criteria.Order;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hari.data.WebKinmelServiceManager;
+import com.hari.model.CartItem;
 import com.hari.model.Category;
 import com.hari.model.Item;
 import com.hari.model.Manufacturer;
@@ -35,6 +39,7 @@ public class AdminController {
 	
 	@RequestMapping("adminHome")
 	public ModelAndView adminHome(WebRequest request,SessionStatus status){
+		try{
 		User user=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
 		if(user==null||!user.getRole().equalsIgnoreCase("admin")){
 			ModelAndView mav=new ModelAndView("redirect:home.htm");
@@ -42,6 +47,13 @@ public class AdminController {
 		}
 		ModelAndView mav=new ModelAndView("adminHome");
 		return mav;	
+		}
+		catch(Exception e){
+			System.out.println(e);
+			ModelAndView mav=new ModelAndView("message");
+			mav.addObject("message", "cannot connect to databse");
+			return mav;
+		}
 		
 	}
 	public void addItemContent(ModelAndView mav){
@@ -97,11 +109,17 @@ public class AdminController {
 				//-- if uploaded file is empty
 				if(fileName!=""){
 					//String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
-					String testpath=context.getRealPath("/");
-					System.out.println("==>"+testpath);
+					//----------
+					//this path to be added during deployment
+					//----------
+//					String imagePath=context.getRealPath("/resources/upload/"+fileName);
+//					System.out.println("==>"+imagePath);
+					
 					String imagePath="/Users/hari/git/local_WebKinmel/WebKinmel/WebContent/resources/upload/"+fileName;
-					System.out.println("==>>>"+imagePath);
+//					System.out.println("==>>>"+imagePath);
 					File f=new File(imagePath);
+//					File f=new File(testpath);
+					System.out.println("image saved to ==>"+imagePath);
 					formItem.setImagePath("/WebKinmel"+imagePath.substring(imagePath.indexOf("/resources")));
 					formItem.setFile(null);
 					FileOutputStream fos=new FileOutputStream(f);
@@ -130,7 +148,21 @@ public class AdminController {
 		else{
 			Date date=new Date();
 			formItem.setAddedDate(date);
-			WebKinmelServiceManager.save(formItem);
+			Item item=checkOldItem(formItem);
+			if(item==null){
+				WebKinmelServiceManager.save(formItem);
+			}
+			else{
+				int oldStock=item.getQuantity();
+				int newStock=formItem.getQuantity();
+				if(formItem.getImagePath()!=null){
+					item.setImagePath(formItem.getImagePath());
+				}
+				item.setQuantity(oldStock+newStock);
+				WebKinmelServiceManager.update(item);
+				formItem=item;
+			}
+			
 		}
 		System.out.println("object"+formItem+" saved");
 		ModelAndView mav=new ModelAndView("admin/adminItem");
@@ -138,6 +170,19 @@ public class AdminController {
 		mav.addObject("recent", formItem);
 		return mav;	
 		
+	}
+	public Item checkOldItem(Item item){
+		List items=WebKinmelServiceManager.select("select i from Item i where "
+													+"i.manufacturer='"+item.getManufacturer()+"'"
+													+" and i.category='"+item.getCategory()+"'"
+													, Item.class);
+		for (Object object : items) {
+			Item item2=(Item) object;
+			if(item.getName().equalsIgnoreCase(item2.getName())){
+				return item2;
+			}
+		}
+		return null;
 	}
 	@RequestMapping("admin/removeItem")
 	public ModelAndView removeItem(@RequestParam("id")int id){
@@ -278,35 +323,87 @@ public class AdminController {
 	@RequestMapping("admin/removeUser")
 	public ModelAndView removeUser(@RequestParam("id")int id){
 		ModelAndView mav=new ModelAndView("admin/adminUser");
+		
+		List orders=WebKinmelServiceManager.select("select o from Orders o", Orders.class);
+		for (Object object : orders) {
+			Orders order=(Orders) object;
+			for (Object object2 : order.getCartItems()) {
+				CartItem cartItem=(CartItem) object2;
+				WebKinmelServiceManager.remove(cartItem.getId(), CartItem.class);
+			}
+			WebKinmelServiceManager.remove(order.getId(), Orders.class);
+		}
 		WebKinmelServiceManager.remove(id, User.class);
 		List userList=WebKinmelServiceManager.select("select u from User u where u.role='user'", User.class);
 		String usersTable=WebKinmelServiceManager.getUsersTable(userList);
 		mav.addObject("usersTable", usersTable);
 		return mav;
 	}	
-	
+	public List getsearchOrders(String search){
+		List orders=WebKinmelServiceManager.select("select o from Orders o join o.cartItems ci where " +
+				"o.id like '%"+search+"%'"+
+				"OR o.date like '%"+search+"%'"+
+				"OR o.user.firstname like '%"+search+"%' " +
+				"OR o.user.lastname like '%"+search+"%' " +
+				"OR o.user.email like '%"+search+"%' " +
+				"OR o.user.username like '%"+search+"%' "+
+				"OR o.user.telephone like '%"+search+"%' "+
+				"OR o.user.country like '%"+search+"%' "+
+				"OR o.user.city like '%"+search+"%'"+
+				"OR o.user.area like '%"+search+"%' "+
+				"OR o.user.street like '%"+search+"%' "+
+				"OR ci.item.name like '%"+search+"%'"+
+				"OR ci.item.id like '%"+search+"%'"+
+				"group by o.id", User.class);
+		return orders;
+	}
 	@RequestMapping("admin/adminOrders")
 	public ModelAndView adminOrders(@RequestParam(value="search",required=false)String search){
 		ModelAndView mav=new ModelAndView("admin/adminOrders");
 		List orders=WebKinmelServiceManager.select("select o from Orders o", Orders.class);
 		if(search!=null){
-//			"select o from Orders o join o.cartItems ci where ci.item.name like '%sam%' group by o.id"
-			orders=WebKinmelServiceManager.select("select o from Orders o join o.cartItems ci where " +
-					"o.id like '%"+search+"%'"+
-					"OR o.date like '%"+search+"%'"+
-					"OR o.user.firstname like '%"+search+"%' " +
-					"OR o.user.lastname like '%"+search+"%' " +
-					"OR o.user.email like '%"+search+"%' " +
-					"OR o.user.username like '%"+search+"%' "+
-					"OR o.user.telephone like '%"+search+"%' "+
-					"OR o.user.country like '%"+search+"%' "+
-					"OR o.user.city like '%"+search+"%'"+
-					"OR o.user.area like '%"+search+"%' "+
-					"OR o.user.street like '%"+search+"%' "+
-					"OR ci.item.name like '%"+search+"%'"+
-					"OR ci.item.id like '%"+search+"%'"+
-					"group by o.id", User.class);
+			orders=getsearchOrders(search);
 		}
+		String ordersTable=WebKinmelServiceManager.getOrdersTable(orders);
+		mav.addObject("ordersTable", ordersTable);
+		return mav;
+	}
+	
+	@RequestMapping("admin/undeliveredOrders")
+	public ModelAndView adminUndeliveredOrders(@RequestParam(value="search",required=false)String search){
+		ModelAndView mav=new ModelAndView("admin/adminOrders");
+		List orders=WebKinmelServiceManager.select("select o from Orders o where o.deliveryStatus=null", Orders.class);
+		if(search!=null){
+			orders=getsearchOrders(search);
+		}
+		String ordersTable=WebKinmelServiceManager.getOrdersTable(orders);
+		mav.addObject("ordersTable", ordersTable);
+		return mav;
+	}
+	@RequestMapping("admin/deliveredOrders")
+	public ModelAndView adminDeliveredOrders(@RequestParam(value="search",required=false)String search){
+		ModelAndView mav=new ModelAndView("admin/adminOrders");
+		List orders=WebKinmelServiceManager.select("select o from Orders o where o.deliveryStatus='delivered'", Orders.class);
+		if(search!=null){
+			orders=getsearchOrders(search);
+		}
+		String ordersTable=WebKinmelServiceManager.getOrdersTable(orders);
+		mav.addObject("ordersTable", ordersTable);
+		return mav;
+	}
+	@RequestMapping("admin/delivery")
+	public ModelAndView deliver(@RequestParam("id")int id,@RequestParam("status")Boolean status){
+		Orders order=(Orders) WebKinmelServiceManager.find(id, Orders.class);
+		if(status==false){
+			order.setDeliveryStatus("delivered");
+		}
+		else{
+			order.setDeliveryStatus(null);
+		}
+		order.setDeliveryDate(new Date());
+		WebKinmelServiceManager.update(order);
+		ModelAndView mav=new ModelAndView("admin/adminOrders");
+		List orders=WebKinmelServiceManager.select("select o from Orders o where o.deliveryStatus='delivered'", Orders.class);
 		String ordersTable=WebKinmelServiceManager.getOrdersTable(orders);
 		mav.addObject("ordersTable", ordersTable);
 		return mav;
@@ -315,6 +412,31 @@ public class AdminController {
 	@RequestMapping("admin/adminReports")
 	public ModelAndView adminReports(){
 		ModelAndView mav=new ModelAndView("admin/adminReports");
+		List list=WebKinmelServiceManager.select("select i From Item i", Item.class);
+		JSONArray array=new JSONArray();
+		for (int i = 0; i < 7; i++) {
+			Item item=(Item) list.get(i);
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put("x", item.getName());
+				JSONArray array2=new JSONArray();
+				array2.put(item.getQuantity());
+				array2.put(item.getPrice());
+			jsonObject.put("y", array2);
+			jsonObject.put("tooltip", item.getName());
+			
+			array.put(jsonObject);
+		}
+		mav.addObject("data", array);
+		return mav;
+	}
+	@RequestMapping("admin/manufacturersReport")
+	public ModelAndView manufacturerReports(){
+		ModelAndView mav=new ModelAndView("admin/manufacturersReport");
+		return mav;
+	}
+	@RequestMapping("admin/categoriesReports")
+	public ModelAndView categoriesReports(){
+		ModelAndView mav=new ModelAndView("admin/categoriesReport");
 		return mav;
 	}
 }

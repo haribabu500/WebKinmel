@@ -46,6 +46,7 @@ body
 	width:250px;
 	height:115px;
 	float:left;
+	
 }
 .ss{
 	display:inline-block;	
@@ -254,4 +255,9 @@ body
 tr{transition: background-color 2s linear;}/* this is for animation after adding an item */
 div.modal-content{border-radius: 20px;}/* for modal dialof in register and login */
 .reportnav{float: left;}
-.reportbody{float: left;}
+.reportbody{width: 50%; padding-left: 20px;}
+ul.dropdown-menu.color_report_menu{ background:rgb(120,25,20)};
+.reporting{width:50%;}
+.error{
+    color:#FF0000;
+}

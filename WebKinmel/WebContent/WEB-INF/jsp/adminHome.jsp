@@ -6,7 +6,12 @@
 <link type="text/css" href="/WebKinmel/resources/css/style.css" rel="stylesheet" />
 <link type="text/css" href="/WebKinmel/resources/css/bootstrap.css" rel="stylesheet" />
 <script src="/WebKinmel/resources/js/jquery.js"></script> 
-<script src="/WebKinmel/resources/js/bootstrap.js"></script>   
+<script src="/WebKinmel/resources/js/bootstrap.js"></script>  
+ <!-- Custom CSS -->
+    <link href="/WebKinmel/resources/css/sb-admin.css" rel="stylesheet">
+<!-- Morris Charts CSS -->
+<link href="/WebKinmel/resources/css/plugins/morris.css" rel="stylesheet">
+
 <script type="text/javascript">
 /* script to disable unwanted enter key event on form submit */
 function stopRKey(evt) { 
@@ -16,6 +21,8 @@ function stopRKey(evt) {
 } 
 document.onkeypress = stopRKey; 
 </script> 
+<script src="/WebKinmel/resources/js/validation/additional-methods.min.js"></script> 
+<script src="/WebKinmel/resources/js/validation/jquery.validate.min.js"></script> 
 </head>
 
 <body>
@@ -33,6 +40,7 @@ document.onkeypress = stopRKey;
     			});
     		</script>
 		</div>
+		<div class="clear"></div>
         <div class="logobar">
         	<div class="logo">
             	<img src="/WebKinmel/resources/image/logo2.png" height="100" />
@@ -71,6 +79,7 @@ document.onkeypress = stopRKey;
                 </script>
             </div>
         </div>
+        <div class="clear"></div>
         <div class="menubar">
         	<ul>
             	<li><a href="adminHome.htm" name="adminHomeContent">HOME</a></li>
@@ -78,16 +87,45 @@ document.onkeypress = stopRKey;
                 <li><a href="#" name="adminCategory">CATEGORIES</a></li>
                 <li><a href="#" name="adminManufacturer">MANUFACTURERS</a></li>
                 <li><a href="#" name="adminUser">USERS</a></li>
-                <li><a href="#" name="adminOrders">ORDERS</a></li>
-                <li><a href="#" name="adminReports">REPORTS</a></li>
+                <!-- <li><a href="#" name="adminOrders">ORDERS</a></li> -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Orders <b class="caret"></b></a>
+                    <ul class="dropdown-menu color_report_menu">
+                        <li>
+                            <a href="#" name="undeliveredOrders"> Undelivered Orders</a>
+                        </li>
+                        <li>
+                            <a href="#" name="deliveredOrders"> Delivered Orders</a>
+                        </li>
+                        <li>
+                            <a href="#" name="adminOrders"> All Orders</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                <!-- <li><a href="#" name="adminReports">REPORTS</a></li> -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Reports <b class="caret"></b></a>
+                    <ul class="dropdown-menu color_report_menu">
+                        <li>
+                            <a href="#" name="manufacturersReport"> Manufacturers report</a>
+                        </li>
+                        <li>
+                            <a href="#" name="categoriesReports"> Categories Report</a>
+                        </li>
+                        
+                    </ul>
+                </li>
             </ul>
         </div>
-        <br clear="all" />
+        <div class="clear"></div>
         <div class="mainContent" id="mainContent">  
-        	
+
         </div>
+		
     </div>
 	<div class="clear"></div>
+       
 	<div class="footer">
     	<div class="wrapper">
     		<div class="upper-footer"><img src="/WebKinmel/resources/image/footer_secure.png" height="65"/></div>
@@ -153,13 +191,15 @@ document.onkeypress = stopRKey;
 <script>
 	jQuery(".menubar a").click(function(){
 		var name=jQuery(this).attr("name");
-		jQuery.ajax({
-			url:"admin/"+jQuery(this).attr("name")+	".htm",
-			success:function(data){
-				jQuery("#mainContent").html(data);
-				jQuery("#mainContent").attr("name",name);
-			}
-		}); 
+		if(name!=null){
+			jQuery.ajax({
+				url:"admin/"+jQuery(this).attr("name")+	".htm",
+				success:function(data){
+					jQuery("#mainContent").html(data);
+					jQuery("#mainContent").attr("name",name);
+				}
+			}); 
+		}
 	});
 </script>
 </body>

@@ -14,5 +14,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="/Users/hari/Documents/workspace/AirlineReservationSystem/WebContent/WEB-INF/lib/spring-web-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/Users/hari/Documents/workspace/SpringPropertiesFileDemo/WebContent/WEB-INF/lib/spring-web-3.2.0.RELEASE.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

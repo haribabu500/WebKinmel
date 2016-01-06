@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
@@ -103,6 +104,49 @@ public class LoginController {
 		ModelAndView mav=new ModelAndView("login/changePasword");
 		User user=new User();
 		mav.addObject("user", user);
+		return mav;
+	}
+	@RequestMapping("checkEmail")
+	public ModelAndView checkEmail(@RequestParam(value="email",required=false)String email){
+		ModelAndView mav=new ModelAndView("message");
+		List list=WebKinmelServiceManager.select("select u from User u where u.email='"+email+"'", User.class);
+		if(list.size()==0){
+			System.out.println(email+"==>email do not exist");
+			mav.addObject("message",true);
+		}
+		else{
+			System.out.println(email+"==>email exists");
+			mav.addObject("message",false);
+		}
+		return mav;
+	}
+	@RequestMapping("checkUsername")
+	public ModelAndView checkUsername(@RequestParam(value="username",required=false)String username){
+		ModelAndView mav=new ModelAndView("message");
+//		mav.addObject("message",false);
+		List list=WebKinmelServiceManager.select("select u from User u where u.username='"+username+"'", User.class);
+		if(list.size()==0){
+			mav.addObject("message",true);
+			System.out.println(username+"==>useranme do not exist");
+		}
+		else{
+			mav.addObject("message",false);System.out.println(username+"==>username exists");
+		}
+		return mav;
+	}
+	@RequestMapping("checkPasssword")
+	public ModelAndView checkPasssword(@RequestParam(value="oldPassword",required=false)String password,
+										@RequestParam(value="username",required=false)String username){
+		ModelAndView mav=new ModelAndView("message");
+//		mav.addObject("message",false);
+		List list=WebKinmelServiceManager.select("select u from User u where u.username='"+username+"' and u.password='"+password+"'", User.class);
+		if(list.size()==0){
+			mav.addObject("message",false);
+			System.out.println(password+"==>password do not exist");
+		}
+		else{
+			mav.addObject("message",true);System.out.println(password+"==>password exists");
+		}
 		return mav;
 	}
 }

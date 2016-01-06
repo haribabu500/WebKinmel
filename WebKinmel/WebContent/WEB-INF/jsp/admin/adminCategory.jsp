@@ -8,7 +8,7 @@
 			<form:hidden path="id"/>
 			<div class="form-group">
 				<label for="name">Name</label><br>
-				<form:input path="name" class="form-control"/>
+				<form:input path="name" class="form-control" required="required"/>
 			</div>
 		</form:form>
 		<div class="form-group">
@@ -37,19 +37,22 @@
   
 
 <script>
+	function submitData(){
+		var valid=$("#addCategoryForm").validate().form(); 
+		if(valid==true){
+			jQuery.post('admin/addCategoryAction.htm',jQuery("#addCategoryForm").serialize(),function(data){
+				jQuery("#mainContent").html(data);
+			});
+		}
+	}
 	jQuery("#addCategory").click(function(){
-		alert("test");
-		jQuery.post('admin/addCategoryAction.htm',jQuery("#addCategoryForm").serialize(),function(data){
-			jQuery("#mainContent").html(data);
-		});
+		submitData();
 	});
 	
 	jQuery("#addCategoryForm input").keydown(function(e){
 		var code=e.which;
 		if(code==13){
-			jQuery.post('admin/addCategoryAction.htm',jQuery("#addCategoryForm").serialize(),function(data){
-				jQuery("#mainContent").html(data);
-			});
+			submitData();
 		}
 	});
 	
@@ -59,19 +62,28 @@
 			url:"admin/adminCategory.htm?id="+jQuery(this).parent().attr("id")+"&search="+jQuery("#searchInput").val(),
 			success:function(data){
 				jQuery("#mainContent").html(data);
-			}
+			},
+			error:function(){
+				 alert("Oops something went wrong");
+			 }
 		}); 
 	});
 	
 	jQuery(".delete").click(function(){
 		var id=jQuery(this).attr("id");
-		jQuery.ajax({
-			url:"admin/removeCategory.htm?id="+id,
-			success:function(data){
-				//alert("deleted!!");
-				jQuery("#mainContent").html(data);
-				//location.href="administrationDashboard.htm";
-			}
-		});
+		var n=confirm("Are you sure you want to remove?");
+		if(n==true){
+			jQuery.ajax({
+				url:"admin/removeCategory.htm?id="+id,
+				success:function(data){
+					alert("successfully deleted!!");
+					jQuery("#mainContent").html(data);
+					//location.href="administrationDashboard.htm";
+				},
+				error:function(){
+					 alert("Oops something went wrong");
+				 }
+			});
+		}
 	});
 </script>

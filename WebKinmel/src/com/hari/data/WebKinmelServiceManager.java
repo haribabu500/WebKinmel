@@ -17,19 +17,30 @@ import com.hari.model.Orders;
 import com.hari.model.User;
 
 public class WebKinmelServiceManager {
-	public static EntityManager entityManager = Persistence
+	public static EntityManager entityManager = createEntityManager();
+	public static EntityManager createEntityManager(){
+		try{
+			return Persistence
 			.createEntityManagerFactory("WEB_KINMEL")
 			.createEntityManager();
+		}
+		catch(Exception e){
+			System.out.println(e);
+			return null;
+		}
+	}
 	public static void save(Object object) {
 		entityManager.getTransaction().begin();
 		entityManager.persist(object);
 		entityManager.getTransaction().commit();
+		System.out.println("Object ==>"+object+" saved");
 	}
 	
 	public static void update(Object object) {
 		entityManager.getTransaction().begin();
 		entityManager.merge(object);
 		entityManager.getTransaction().commit();
+		System.out.println("Object ==>"+object+" updated");
 	}
 	public static List<Object> select(String query, Class clasz) {
 		return entityManager.createQuery(query, clasz).getResultList();
@@ -42,6 +53,7 @@ public class WebKinmelServiceManager {
 		entityManager.getTransaction().begin();
 			entityManager.remove(object);
 		entityManager.getTransaction().commit();
+		System.out.println("Object ==>"+object+" removed");
 	}
 
 	public static String getItemsTable(List items) {
@@ -52,6 +64,7 @@ public class WebKinmelServiceManager {
 				+ "<th>Price</th>"
 				+ "<th>Description</th>"
 				+ "<th>Preview</th>"
+				+ "<th>Quantity</th>"
 				+ "<th></th>" 
 				+"</tr></thead>";
 		
@@ -64,6 +77,7 @@ public class WebKinmelServiceManager {
 					+ "<td class='update'>"+item.getPrice()+"</td>"
 					+ "<td class='update'>"+item.getDescription()+"</td>"
 					+ "<td class='update'><img src='"+item.getImagePath()+"' height='40'/></td>"
+					+ "<td class='update'>"+item.getQuantity()+"</td>"
 					+ "<td><button id='"+item.getId()+"' name='"+item+"'class='myButton delete'>Remove</button></td>"
 					+ "</tr>");
 		}
@@ -116,7 +130,7 @@ public class WebKinmelServiceManager {
 				+ "<th>Email</th>"
 				+ "<th>Address</th>"
 				+ "<th>Contact</th>"
-				+ "<th></th></tr></thead>";
+				+ "</tr></thead>";
 		for (Object object : userList) {
 			User user=(User) object;
 			table=table.concat("<tr id='"+user.getId()+"'>"
@@ -124,9 +138,9 @@ public class WebKinmelServiceManager {
 					+ "<td class='update'>"+user.getFirstname()+" "+user.getLastname()+"</td>"
 					+ "<td class='update'>"+user.getUsername()+"</td>"
 					+ "<td class='update'>"+user.getEmail()+"</td>"
-					+ "<td class='update'>"+user.getEmail()+"</td>"
+					+ "<td class='update'>"+user.getStreet()+", "+user.getArea()+", "+user.getCity()+"</td>"
 					+ "<td class='update'>"+user.getTelephone()+"</td>"
-					+ "<td><button id='"+user.getId()+"' name='"+user+"'class='myButton delete'>Remove</button></td>"
+//					+ "<td><button id='"+user.getId()+"' name='"+user+"'class='myButton delete'>Remove</button></td>"
 					+ "</tr>");
 		}
 		table=table.concat("</table>");
@@ -139,9 +153,16 @@ public class WebKinmelServiceManager {
 				+"<th>User</th>"
 				+ "<th>Date</th>"
 				+ "<th>Items</th>"
+				+ "<th>Deliver</th>"
 				+ "<th></thead>";
 		for (Object object : orders) {
 			Orders order=(Orders) object;
+			String delivered="";
+			if(order.getDeliveryStatus()!=null){
+				if(order.getDeliveryStatus().equals("delivered")){
+					delivered="checked='checked'";
+				}
+			}
 			List<CartItem> cartitems=order.getCartItems();
 			String itemTable="<table class='table table-hover'>";
 			itemTable=itemTable.concat("<tr><th>Item id</th>" 
@@ -179,6 +200,7 @@ public class WebKinmelServiceManager {
 					+ "<td class='update'>"
 						+itemTable
 					+"</td>"
+					+ "<td><input class='deliver' type='checkbox'"+delivered+" /></td>"
 //					+ "<td><button id='"+order.getId()+"' name='"+order+"'class='myButton delete'>Remove</button></td>"
 					+ "</tr>");
 		}

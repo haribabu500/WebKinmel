@@ -1,12 +1,12 @@
 package com.hari.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -29,19 +29,27 @@ public class HomeController {
 	
 	@RequestMapping("home")
 	public ModelAndView home(WebRequest request){
-		ModelAndView mav=new ModelAndView("home");
-		List categories=WebKinmelServiceManager.select("select c from Category c", Category.class);
-		mav.addObject("categories", categories);	
-		List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
-		mav.addObject("manufacturers", manufacturers);
-		List newProducts=WebKinmelServiceManager.select("select i from Item i ORDER BY i.addedDate DESC", Item.class);
-		mav.addObject("newProducts", newProducts);
-		/*This shopping should be added after the successful login to the system*/
-		ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
-		if(cart!=null){
-			mav.addObject("cart",cart);
+		try{
+			ModelAndView mav=new ModelAndView("home");
+			List categories=WebKinmelServiceManager.select("select c from Category c", Category.class);
+			mav.addObject("categories", categories);	
+			List manufacturers=WebKinmelServiceManager.select("select m from Manufacturer m", Manufacturer.class);
+			mav.addObject("manufacturers", manufacturers);
+			List newProducts=WebKinmelServiceManager.select("select i from Item i where i.quantity>=1 ORDER BY i.addedDate DESC", Item.class);
+			mav.addObject("newProducts", newProducts);
+			/*This shopping should be added after the successful login to the system*/
+			ShoppingCart cart=(ShoppingCart) request.getAttribute("cart", WebRequest.SCOPE_SESSION);
+			if(cart!=null){
+				mav.addObject("cart",cart);
+			}
+			return mav;
 		}
-		return mav;
+		catch (Exception e) {
+			System.out.println(e);
+			ModelAndView mav=new ModelAndView("message");
+			mav.addObject("message", "cannot connect to databse");
+			return mav;
+		}
 	}
 	@RequestMapping("topbarContent")
 	public ModelAndView topbarContent(WebRequest request){
@@ -58,22 +66,22 @@ public class HomeController {
 									@RequestParam(value="search",required=false)String querySearch,
 									@RequestParam(value="newProducts",required=false)String newProducts){
 		ModelAndView mav=new ModelAndView("itemsContent");
-		List items=WebKinmelServiceManager.select("select i from Item i", Item.class);
+		List items=WebKinmelServiceManager.select("select i from Item i where i.quantity>=1", Item.class);
 		mav.addObject("items", items);
 		if(queryCategory!=null){
-			List newItems=WebKinmelServiceManager.select("select i from Item i where i.category='"+queryCategory+"'", Item.class);
+			List newItems=WebKinmelServiceManager.select("select i from Item i where i.category='"+queryCategory+"' and i.quantity>=1", Item.class);
 			mav.addObject("items", newItems);
 		}
 		if(queryManufacturer!=null){
-			List newItems=WebKinmelServiceManager.select("select i from Item i where i.manufacturer='"+queryManufacturer+"'", Item.class);
+			List newItems=WebKinmelServiceManager.select("select i from Item i where i.manufacturer='"+queryManufacturer+"' and i.quantity>=1", Item.class);
 			mav.addObject("items", newItems);
 		}
 		if(querySearch!=null){
-			List newItems=WebKinmelServiceManager.select("select i from Item i where i.name like '%"+querySearch+"%'", Item.class);
+			List newItems=WebKinmelServiceManager.select("select i from Item i where i.name like '%"+querySearch+"%' and i.quantity>=1", Item.class);
 			mav.addObject("items", newItems);
 		}
 		if(newProducts!=null){
-			List newItems=WebKinmelServiceManager.select("select i from Item i ORDER BY i.addedDate desc", Item.class);
+			List newItems=WebKinmelServiceManager.select("select i from Item i where i.quantity>=1 ORDER BY i.addedDate desc", Item.class);
 			mav.addObject("items", newItems);
 		}
 		return mav;
@@ -184,6 +192,13 @@ public class HomeController {
 		Date today=new Date();
 		Orders orders=new Orders();
 		orders.setCartItems(cartItems);
+		for (CartItem cartItem : cartItems) {
+			Item item=cartItem.getItem();
+			int stock=item.getQuantity();
+			int boughtQuantity=cartItem.getQuantity();
+			item.setQuantity(stock-boughtQuantity);
+			WebKinmelServiceManager.update(item);
+		}
 		orders.setDate(new Date());
 		orders.setUser(user);
 //		orders.setItems(orderItems);
@@ -207,5 +222,10 @@ public class HomeController {
 		String ordersTable=WebKinmelServiceManager.getUserOrdersTable(list);
 		mav.addObject("ordersTable", ordersTable);
 		return mav;
+	}
+	@ExceptionHandler(Exception.class)
+	public String exception(Exception e) {
+			
+		return "error";
 	}
 }

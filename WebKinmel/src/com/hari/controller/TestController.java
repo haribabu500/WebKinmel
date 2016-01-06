@@ -77,4 +77,10 @@ public class TestController {
 		ModelAndView mav=new ModelAndView("test/newAdmin");
 		return mav;
 	}
+	
+	@RequestMapping("hari/hari")
+	public ModelAndView hari(){
+		ModelAndView mav=new ModelAndView("admin/adminItem");
+		return mav;
+	}
 }

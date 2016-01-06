@@ -12,7 +12,7 @@
 		<form:hidden path="id"/>
 		<div class="form-group">
 			<label for="name">Name</label><br>
-			<form:input path="name" class="form-control"/>
+			<form:input path="name" id="name" class="form-control" required="required"/>
 		</div>
 		
 		<div class="form-group">
@@ -53,15 +53,20 @@
 		
 		<div class="form-group">
 			<label for="price">Price</label><br>
-			<form:input path="price" class="form-control"/>
+			<form:input path="price" id="price" class="form-control"/>
 		</div>
 		<div class="form-group">
 			<label for="description">Description</label><br>
 			<form:input path="description" class="form-control"/>
 		</div>
 		<div class="form-group">
+			<label for="description">Quantity</label><br>
+			<form:input path="quantity" id="quantity" class="form-control"/>
+		</div>
+		<div class="form-group">
 			<label for="file">Image</label><br>
-			<input name="file" type="file" />
+			<input name="file" type="file" accept="image/*" />
+			
 		</div>
 		<div class="form-group">
 		<br>
@@ -94,27 +99,41 @@
 
 <script>
 	function submitData(){
-		var formData = new FormData(jQuery("#addItemForm")[0]);
-
-	    $.ajax({
-	        url: 'admin/addItemAction.htm',
-	        type: 'POST',
-	        data: formData,
-	        async: false,
-	        cache: false,
-	        contentType: false,
-	        processData: false,
-	        success: function (data) {
-	        alert("Successfully added!!!");
-	        $("#mainContent").html(data);
-	        },
-	        error: function(){
-	            alert("oops something went wrong!!!!!");
-	            }
-	    });
+		var valid=$("#addItemForm").validate({
+			rules: {
+				price:{
+					required:true,
+					number:true
+				},
+				quantity:{
+					digits:true
+				}
+			  }
+			  
+		}).form(); 
+		if(valid==true){
+			var formData = new FormData(jQuery("#addItemForm")[0]);
+		
+		    $.ajax({
+		        url: 'admin/addItemAction.htm',
+		        type: 'POST',
+		        data: formData,
+		        async: false,
+		        cache: false,
+		        contentType: false,
+		        processData: false,
+		        success: function (data) {
+		        alert("Successfully added!!!");
+		        $("#mainContent").html(data);
+		        },
+		        error: function(){
+		            alert("Item could not be saved..");
+		            }
+		    });
+		}
 	}
 	jQuery("#addItem").click(function(){
-		submitData();		
+			submitData();
 	});
 	
 	jQuery("#addItemForm input,select").keydown(function(e){
@@ -134,7 +153,10 @@
 			        scrollTop: $("#mainContent").offset().top
 			    }, 1000);
 				jQuery("#mainContent").html(data);
-			}
+			},
+			error:function(){
+				 alert("Oops something went wrong");
+			 }
 		}); 
 	});
 	
@@ -146,7 +168,10 @@
 				//alert("deleted!!");
 				jQuery("#mainContent").html(data);
 				//location.href="administrationDashboard.htm";
-			}
+			},
+			error:function(){
+				 alert("Oops something went wrong");
+			 }
 		});
 	});
 </script>
