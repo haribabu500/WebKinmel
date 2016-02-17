@@ -39,6 +39,7 @@
 		var valid=$("#addManufacturerForm").validate().form(); 
 		if(valid==true){
 			jQuery.post('admin/addManufacturerAction.htm',jQuery("#addManufacturerForm").serialize(),function(data){
+				alert("Successfully added!!!");
 				jQuery("#mainContent").html(data);
 			});
 		}

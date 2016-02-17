@@ -3,6 +3,8 @@ package com.hari.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.tools.Tool;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import com.hari.data.WebKinmelServiceManager;
 import com.hari.model.Item;
 import com.hari.model.ShoppingCart;
 import com.hari.model.User;
+import com.hari.tools.Tools;
 
 @SessionAttributes(value={"loggedInUser","username","cart"})
 
@@ -31,6 +34,9 @@ public class LoginController {
 	
 	@RequestMapping("registerAction")
 	public ModelAndView registerAction(@ModelAttribute("user")User user){
+		String encryptedPassword=Tools.getHash(user.getPassword());
+		System.out.println(user.getPassword()+"="+encryptedPassword);
+		user.setPassword(encryptedPassword);
 		WebKinmelServiceManager.save(user);
 		ModelAndView mav=new ModelAndView("home");
 		return mav;
@@ -48,7 +54,7 @@ public class LoginController {
 	public ModelAndView loginAction(@ModelAttribute("user")User user){
 		String username=user.getUsername();
 		String password=user.getPassword();
-		List users=WebKinmelServiceManager.select("select u from User u where u.username='"+username+"' and u.password='"+password+"'", User.class);
+		List users=WebKinmelServiceManager.select("select u from User u where u.username='"+username+"' or u.email='"+username+"' and u.password='"+Tools.getHash(password)+"'", User.class);
 		if(users.size()==0){
 			ModelAndView mav=new ModelAndView("message");
 			mav.addObject("message","invalid");
@@ -93,9 +99,9 @@ public class LoginController {
 	@RequestMapping("login/changePasswordAction")
 	public ModelAndView changePasswordAction(@ModelAttribute("user")User formUser,WebRequest request,SessionStatus status){
 		User loggedInUser=(User) request.getAttribute("loggedInUser", WebRequest.SCOPE_SESSION);
-		if(formUser.getOldPassword().equals(loggedInUser.getPassword())){
+		if(Tools.getHash(formUser.getOldPassword()).equals(loggedInUser.getPassword())){
 			if(formUser.getPassword().equals(formUser.getRePassword())){
-				loggedInUser.setPassword(formUser.getPassword());
+				loggedInUser.setPassword(Tools.getHash(formUser.getPassword()));
 				WebKinmelServiceManager.update(loggedInUser);
 				status.setComplete();
 				request.removeAttribute("username", WebRequest.SCOPE_SESSION);
@@ -139,7 +145,7 @@ public class LoginController {
 										@RequestParam(value="username",required=false)String username){
 		ModelAndView mav=new ModelAndView("message");
 //		mav.addObject("message",false);
-		List list=WebKinmelServiceManager.select("select u from User u where u.username='"+username+"' and u.password='"+password+"'", User.class);
+		List list=WebKinmelServiceManager.select("select u from User u where u.username='"+username+"' and u.password='"+Tools.getHash(password)+"'", User.class);
 		if(list.size()==0){
 			mav.addObject("message",false);
 			System.out.println(password+"==>password do not exist");

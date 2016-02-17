@@ -41,6 +41,7 @@
 		var valid=$("#addCategoryForm").validate().form(); 
 		if(valid==true){
 			jQuery.post('admin/addCategoryAction.htm',jQuery("#addCategoryForm").serialize(),function(data){
+				alert("Successfully added!!!");
 				jQuery("#mainContent").html(data);
 			});
 		}

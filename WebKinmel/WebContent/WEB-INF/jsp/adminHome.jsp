@@ -131,32 +131,16 @@ document.onkeypress = stopRKey;
     		<div class="upper-footer"><img src="/WebKinmel/resources/image/footer_secure.png" height="65"/></div>
     		<div class="lower-footer">
     			<div class="lower-footer-divider">
-    				Home page<br />
-    				New Arrivals<br />
-    				Top Sellers<br />
-    				Specials<br />
-    				Cart<br />
+
     			</div>
     			<div class="lower-footer-divider">
-    				Home page<br />
-    				New Arrivals<br />
-    				Top Sellers<br />
-    				Specials<br />
-    				Cart<br />
+    				
     			</div>
     			<div class="lower-footer-divider">
-    				Home page<br />
-    				New Arrivals<br />
-    				Top Sellers<br />
-    				Specials<br />
-    				Cart<br />
+    				
     			</div>
     			<div class="lower-footer-divider">
-    				Home page<br />
-    				New Arrivals<br />
-    				Top Sellers<br />
-    				Specials<br />
-    				Cart<br />
+    				
     			</div>
     			<div class="clear"></div>
     			<div class="lower-footer-centre">

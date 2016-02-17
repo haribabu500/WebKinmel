@@ -8,14 +8,14 @@
 					<div id="login-error" class="alert alert-danger hidden" role="alert">Invalid username or password</div>
 					<form:form modelAttribute="user" id="loginForm" class="form-horizontal" role="form">
 						  <div class="form-group">
-						    <label for="username" class="col-sm-2 control-label">Username</label>
-						    <div class="col-sm-10">
+						    <label for="username" class="col-sm-3 control-label">Username/Email</label>
+						    <div class="col-sm-9">
 						      <form:input path="username" type="text" class="form-control" id="username" placeholder="Username" />
 						    </div>
 						  </div>
 						  <div class="form-group">
-						    <label for="password" class="col-sm-2 control-label">Password</label>
-						    <div class="col-sm-10">
+						    <label for="password" class="col-sm-3 control-label">Password</label>
+						    <div class="col-sm-9">
 						      <form:input path="password" type="password" class="form-control" id="password" placeholder="Password" />
 						    </div>
 						  </div>

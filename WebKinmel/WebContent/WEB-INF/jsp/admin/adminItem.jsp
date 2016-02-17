@@ -162,17 +162,20 @@
 	
 	jQuery(".delete").click(function(){
 		var id=jQuery(this).attr("id");
-		jQuery.ajax({
-			url:"admin/removeItem.htm?id="+id,
-			success:function(data){
-				//alert("deleted!!");
-				jQuery("#mainContent").html(data);
-				//location.href="administrationDashboard.htm";
-			},
-			error:function(){
-				 alert("Oops something went wrong");
-			 }
-		});
+		var n=confirm("Are you sure you want to remove?");
+		if(n==true){
+			jQuery.ajax({
+				url:"admin/removeItem.htm?id="+id,
+				success:function(data){
+					alert("Successfully deleted!!");
+					jQuery("#mainContent").html(data);
+					//location.href="administrationDashboard.htm";
+				},
+				error:function(data){
+					 alert("Item cannot be removed.");
+				 }
+			});
+		}
 	});
 </script>
 	<!-- ************************************************************************ -->

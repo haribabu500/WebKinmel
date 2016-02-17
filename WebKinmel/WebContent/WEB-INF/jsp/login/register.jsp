@@ -54,6 +54,15 @@
 						  </div>
 						  
 						  <div class="form-group">
+						    <label for="country" class="col-sm-2 control-label">Country</label>
+						    <div class="col-sm-10">
+						      <form:select path="country" type="text" class="form-control" id="country" placeholder="city" required="required" value="nepal">
+						      	<option value="nepal">Nepal</option>
+						      </form:select>
+						    </div>
+						  </div>
+						  
+						  <div class="form-group">
 						    <label for="username" class="col-sm-2 control-label">Username</label>
 						    <div class="col-sm-10">
 						      <form:input path="username" type="text" class="form-control" id="username" placeholder="Username" required="required"/>

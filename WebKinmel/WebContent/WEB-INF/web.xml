@@ -26,7 +26,9 @@
 	 <welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-	
+	<session-config>
+  		<session-timeout>10</session-timeout>
+	</session-config>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value> 

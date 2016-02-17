@@ -157,7 +157,7 @@
                             </div><!-- End of panel body-->
                         </div><!-- End of myPanel-->
 						
-                        <div id="information" class="myPanel">
+                        <!-- <div id="information" class="myPanel">
                                 <div class="myPanel-heading">Information</div>
                                 <div class="myPanel-body">
                                     <p>Delivery</p>
@@ -167,8 +167,8 @@
 									<p>Secure Payment</p>
 									<p>Our Stores</p>
 									
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
+                            </div>End of panel body
+                        </div>End of myPanel -->
                         
                          <!-- <div class="myPanel">
                                 <div class="myPanel-heading">Tags</div>
@@ -272,8 +272,19 @@
 									</script>
 								</div><!-- End of panel body-->
                         </div><!-- End of myPanel-->
-                        
-                         <div id="viewedProducts" class="myPanel">
+                        <div id="information" class="myPanel">
+                                <div class="myPanel-heading">Information</div>
+                                <div class="myPanel-body">
+                                    <p>Delivery</p>
+                                    <p>Legal Notice</p>
+									<p>Terms and conditions of use</p>
+									<p>About us</p>
+									<p>Secure Payment</p>
+									<p>Our Stores</p>
+									
+                            </div><!-- End of panel body-->
+                        </div><!-- End of myPanel-->
+                        <!--  <div id="viewedProducts" class="myPanel">
                                 <div class="myPanel-heading">Viewed Products</div>
                                 <div class="myPanel-body">
                                     <b>Test Product</b><br />
@@ -282,8 +293,8 @@
 										<option>All manufacturers</option>
 										<option>to be added</option>
 									</select>
-                            </div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
+                            </div>End of panel body
+                        </div>End of myPanel -->
 						
 						<!-- 
 						<div class="myPanel">
@@ -296,12 +307,12 @@
                         </div>End of myPanel
 						 -->
 						
-						<div id="ourStores" class="myPanel">
+						<!-- <div id="ourStores" class="myPanel">
                                 <div class="myPanel-heading">Our Stores</div>
                                 <div class="myPanel-body">
                                     <p>discover our stores</p>
-								</div><!-- End of panel body-->
-                        </div><!-- End of myPanel-->
+								</div>End of panel body
+                        </div>End of myPanel -->
                 </div><!-- End of side-->
 				<!-- ========================================================================== -->
             </div>
@@ -312,13 +323,13 @@
     	<div class="wrapper">
     		<div class="upper-footer"><img src="/WebKinmel/resources/image/footer_secure.png" height="65"/></div>
     		<div class="lower-footer">
-    			<div class="lower-footer-divider">
+    			<!-- <div class="lower-footer-divider">
     				Home page<br />
     				New Arrivals<br />
     				Top Sellers<br />
     				Specials<br />
     				Cart<br />
-    			</div>
+    			</div> -->
     			<!-- <div class="lower-footer-divider">
     				Home page<br />
     				New Arrivals<br />

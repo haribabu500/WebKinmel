@@ -360,7 +360,7 @@ public class AdminController {
 	@RequestMapping("admin/adminOrders")
 	public ModelAndView adminOrders(@RequestParam(value="search",required=false)String search){
 		ModelAndView mav=new ModelAndView("admin/adminOrders");
-		List orders=WebKinmelServiceManager.select("select o from Orders o", Orders.class);
+		List orders=WebKinmelServiceManager.select("select o from Orders o order by o.date desc", Orders.class);
 		if(search!=null){
 			orders=getsearchOrders(search);
 		}

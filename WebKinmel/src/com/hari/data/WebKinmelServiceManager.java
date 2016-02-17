@@ -70,7 +70,10 @@ public class WebKinmelServiceManager {
 		
 		for (Object object : items) {
 			Item item=(Item) object;
-			table=table.concat("<tr id='"+item.getId()+"'>"
+			int quantity=item.getQuantity();
+			String notify="";
+			if(quantity<10){notify="style='background:red;'";}
+			table=table.concat("<tr id='"+item.getId()+"'"+notify+">"
 					+ "<td class='update'>"+item.getName()+"</td>"
 					+ "<td class='update'>"+item.getCategory()+"</td>"
 					+ "<td class='update'>"+item.getManufacturer()+"</td>"
