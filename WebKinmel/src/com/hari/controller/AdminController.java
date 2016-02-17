@@ -108,7 +108,6 @@ public class AdminController {
 			try {
 				//-- if uploaded file is empty
 				if(fileName!=""){
-					//String imagePath="/Users/hari/Documents/workspace/WebKinmel/WebContent/resources/upload/"+fileName;
 					//----------
 					//this path to be added during deployment
 					//----------
